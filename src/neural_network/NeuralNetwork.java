@@ -17,9 +17,12 @@ public class NeuralNetwork {
 	public static double LEARNING_RATE = 0.1d;
 	
 	private Neuron[] neurons;
+	private LearningMethod learningMethod;
 	
 	public NeuralNetwork(LearningMethod learningMethod, int inputCount, int outputCount) {		
 		neurons = new Neuron[outputCount];
+		
+		this.learningMethod = learningMethod;
 		
 		for (int i = 0; i < neurons.length; i++)
 			neurons[i] = new Neuron(learningMethod, inputCount);
@@ -38,12 +41,15 @@ public class NeuralNetwork {
 		double[] experimentalResults = getOutput(inputs);
 		
 		for (int i = 0; i < neurons.length; i++)
-//			if (actualResults[i] == 1) // Positive only learning
 			neurons[i].learn(actualResults[i] - experimentalResults[i], inputs);
 	}
 	
 	public Neuron[] getNeurons() {
 		return neurons;
+	}
+	
+	public LearningMethod getLearningMethod() {
+		return learningMethod;
 	}
 	
 }

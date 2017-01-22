@@ -30,7 +30,7 @@ public class Neuron {
 		for (int i = 0; i < inputCount; i++)
 			sum += weights[i] * inputs[i];
 				
-		return NetworkMath.sigma(sum);
+		return NetworkMath.sigmoid(sum);
 	}
 	
 	private void randomizeWeights() {
@@ -42,6 +42,10 @@ public class Neuron {
 	
 	public double[] getWeights() {
 		return weights;
+	}
+	
+	public void setWeights(double[] weights) {
+		this.weights = weights;
 	}
 	
 	public void learn(double error, int[] inputs) {

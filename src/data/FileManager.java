@@ -25,9 +25,13 @@ public class FileManager {
 
 	public static String[] readFileContent(String filePath) {
 		filePath = getAbsolutePath(filePath);
+		File file = new File(filePath);
+		
+		if (!file.exists())
+			return new String[0];
 
 		try {
-			Scanner fileInput = new Scanner(new File(filePath));
+			Scanner fileInput = new Scanner(file);
 
 			int numLines = 0;
 			while (fileInput.hasNextLine()) {

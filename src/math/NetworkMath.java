@@ -15,8 +15,17 @@ public class NetworkMath {
 		
 	}
 	
-	public static double sigma(double input) {
+	public static double sigmoid(double input) {
 		return 1 / (1 + Math.exp(-input));
+	}
+	
+	public static double cost(double[] experimental, int[] actual) {
+		double variance2 = 0;
+		
+		for (int i = 0; i < experimental.length; i++)
+			variance2 += Math.pow(actual[i] - experimental[i], 2);
+		
+		return variance2 / (experimental.length);
 	}
 
 }
