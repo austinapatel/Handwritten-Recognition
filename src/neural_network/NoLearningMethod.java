@@ -26,5 +26,10 @@ public class NoLearningMethod extends LearningMethod {
 	public String getName() {
 		return NAME;
 	}
+
+	@Override
+	public void onLearningCycleComplete() {
+		
+	}
 	
 }

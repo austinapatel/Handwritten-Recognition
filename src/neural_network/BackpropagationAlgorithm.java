@@ -27,4 +27,9 @@ public class BackpropagationAlgorithm extends LearningMethod {
 		return NAME;
 	}
 
+	@Override
+	public void onLearningCycleComplete() {
+		
+	}
+
 }

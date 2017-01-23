@@ -22,18 +22,19 @@ import neural_network.genetics.GeneticAlgorithm;
 public class Trainer {
 
 	public static void main(String[] args) {
+//		NeuralNetwork neuralNetwork = new NeuralNetwork(
+//				new BackpropagationAlgorithm(),
+//				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
+//				Alphabet.getLength());
+
+		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+		
 		NeuralNetwork neuralNetwork = new NeuralNetwork(
-				new BackpropagationAlgorithm(),
+				new GeneticAlgorithmLearningMethod(geneticAlgorithm),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
 
-		// NeuralNetwork neuralNetwork = new NeuralNetwork(
-		// new GeneticAlgorithmLearningMethod(),
-		// Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
-		// Alphabet.getLength());
-		//
-		// GeneticAlgorithm geneticAlgorithm = new
-		// GeneticAlgorithm(neuralNetwork);
+		geneticAlgorithm.setNeuralNetwork(neuralNetwork);
 
 		Trainer trainer = new Trainer(neuralNetwork);
 		trainer.trainNetwork(true);
@@ -78,6 +79,7 @@ public class Trainer {
 	public void trainNetwork(boolean debug) {
 		String accuracyFileContent = "", costFileContent = "";
 		ArrayList<LetterData> trainingData = new ArrayList<LetterData>();
+		LearningMethod learningMethod = neuralNetwork.getLearningMethod();
 
 		for (char c : Alphabet.getAlphabet().toCharArray()) {
 			String filePath = Constants.RESOURCES_PATH
@@ -98,8 +100,14 @@ public class Trainer {
 		while (!trainingData.isEmpty())
 			shuffledData.add(trainingData
 					.remove((int) (Math.random() * trainingData.size())));
-
+		
+		int count = 0;
 		for (LetterData letterData : shuffledData) {
+			if (count % 10 == 0)
+				System.out.println(((double)count/2600) * 100 + " %");
+			
+			count++;
+			
 			int[] actualValues = new int[Alphabet.getAlphabet().length()];
 
 			for (int i = 0; i < actualValues.length; i++)
@@ -109,7 +117,7 @@ public class Trainer {
 
 			neuralNetwork.learn(letterData.getData1D(), actualValues);
 
-			char letter = letterData.getCharacter();
+//			char letter = letterData.getCharacter();
 
 			if (debug) {
 				// String letterPath = "/" + Constants.OUTPUT_DATA_FOLDER + "/"
@@ -127,6 +135,8 @@ public class Trainer {
 				costFileContent += String.valueOf(experimentalData.getCost())
 						+ "\n";
 			}
+			
+			learningMethod.onLearningCycleComplete();
 		}
 
 		if (debug) {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import data.Alphabet;
 import data.Constants;
+import data.ExperimentalData;
 import data.LetterData;
 import neural_network.Experimenter;
 import neural_network.NeuralNetwork;
@@ -27,18 +28,36 @@ public class GeneticAlgorithm {
 		NeuralNetwork neuralNetwork = new NeuralNetwork(new NoLearningMethod(),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
-		new GeneticAlgorithm(neuralNetwork);
+		
+		Experimenter experimenter = new Experimenter(neuralNetwork);
+		ExperimentalData experimentalData = experimenter.testNetwork(experimenter.getExperimentalData());
+		System.out.println(experimentalData.getAccuracy() * 100 + "%");
+
+		new GeneticAlgorithm() {
+			{
+				setNeuralNetwork(neuralNetwork);
+				beginEvolution();
+			}
+		};
+		
+		experimentalData = experimenter.testNetwork(experimenter.getExperimentalData());
+		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 	}
 
-	private static final int CHROMOSOME_COUNT = 10, GENERATION_COUNT = 100;
-	private static final double BREED_RATE = 0.1d;
+	private static final int CHROMOSOME_COUNT = 100, GENERATION_COUNT = 10;
+	private static final double BREED_RATE = 0.5d, DEATH_RATE = 0.1;
 
 	private NeuralNetwork neuralNetwork;
 	private Genome<Double>[] genomes;
 	private Experimenter experimenter;
 	private ArrayList<LetterData[]> experimentalLetterData;
 
-	public GeneticAlgorithm(NeuralNetwork neuralNetwork) {
+	public GeneticAlgorithm() {
+
+	}
+
+	/** Add the neural network and begins the setup procedure. */
+	public void setNeuralNetwork(NeuralNetwork neuralNetwork) {
 		this.neuralNetwork = neuralNetwork;
 
 		genomes = new Genome[neuralNetwork.getNeurons().length];
@@ -47,55 +66,60 @@ public class GeneticAlgorithm {
 		// Initialize each genome
 		for (int i = 0; i < genomes.length; i++)
 			genomes[i] = new Genome<Double>(CHROMOSOME_COUNT,
-					Constants.GRID_WIDTH * Constants.GRID_HEIGHT, BREED_RATE);
+					Constants.GRID_WIDTH * Constants.GRID_HEIGHT, BREED_RATE, DEATH_RATE);
 
 		// Load all experimental letters
 		experimentalLetterData = new ArrayList<LetterData[]>();
+		
+		for (char c : Alphabet.getAlphabet().toCharArray()) {
+			String filePath = Constants.RESOURCES_PATH
+					+ Constants.EXPERIMENTAL_LETTERS_FOLDER + "\\" + c + ".txt";
+			LetterData[] currentLetterData = LetterData.getLetterData(filePath,
+					c);
 
-		for (int i = 0; i < Alphabet.getLength(); i++) {
-			char curLetter = Alphabet.getCharacter(i);
-			LetterData[] curLetterData = LetterData
-					.getLetterData(LetterData.getDestinationPath(
-							Constants.EXPERIMENTAL_LETTERS_FOLDER, curLetter));
-
-			experimentalLetterData.add(curLetterData);
+			experimentalLetterData.add(currentLetterData);
 		}
 
-		beginEvolution();
-		commitWeights();
+		// beginEvolution();
 
 		// Test the genetic algorithm
-//		experimenter.testNetwork(experimenter.getExperimentalData());
+		// experimenter.testNetwork(experimenter.getExperimentalData());
 	}
 
 	/**
 	 * Evaluates the fitness of each "Chromosome" in each "Genome" (letter) and
 	 * then evolve them by breeding the most fit.
 	 */
-	private void beginEvolution() {
+	public void beginEvolution() {
 		for (int generation = 0; generation < GENERATION_COUNT; generation++) {
 			// System.out.println("GENERATION #" + (generation + 1));
-			// Calculate fitness values
-			// Per neuron/letter
-			for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
-				Genome<Double> genome = genomes[letterIndex];
-
-				// Evaluate the fitness of each chromosome/weight set (same
-				// letter)
-				for (Chromosome<Double> chromosome : genome.getChromosomes())
-					calculateFitness(chromosome, letterIndex);
-
-				// Begin the breeding process of the current genome
-				genome.nextGeneration();
-			}
-
-			// for (Chromosome<Double> chromosome : genomes[0].getChromosomes())
-			// {
-			// System.out.println(chromosome.getFitness());
-			// }
-			System.out.println(genomes[0].getChromosomes()[CHROMOSOME_COUNT - 1]
-					.getFitness());
+			nextGeneration();
 		}
+	}
+
+	public void nextGeneration() {
+		// Calculate fitness values
+		// Per neuron/letter
+		for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
+			Genome<Double> genome = genomes[letterIndex];
+
+			// Evaluate the fitness of each chromosome/weight set (same
+			// letter)
+			for (Chromosome<Double> chromosome : genome.getChromosomes())
+				calculateFitness(chromosome, letterIndex);
+
+			// Begin the breeding process of the current genome
+			genome.nextGeneration();
+		}
+
+//		 for (Chromosome<Double> chromosome : genomes[0].getChromosomes())
+//		 {
+//		 System.out.println(chromosome.getFitness());
+//		 }
+//		 System.out.println(
+//		 genomes[0].getChromosomes()[CHROMOSOME_COUNT - 1].getFitness());
+
+		commitWeights();
 	}
 
 	/** Evaluates the fitness of a specific chromosome. */
@@ -113,16 +137,18 @@ public class GeneticAlgorithm {
 		// Evaluate the average fitness
 		double fitness = 0;
 
-		for (LetterData letterData : experimentalLetterData.get(letterIndex))
-			fitness += neuron.getOutput(letterData.getData1D());
+//		for (LetterData letterData : experimentalLetterData.get(letterIndex))
+//			fitness += neuron.getOutput(letterData.getData1D());
 
-		fitness = fitness / (experimentalLetterData.get(letterIndex).length);
+		fitness = experimenter.testLetter(Alphabet.getCharacter(letterIndex));
+		
+//		fitness = fitness / (experimentalLetterData.get(letterIndex).length);
 
 		// Set the chromosomes fitness
 		chromosome.setFitness(fitness);
 	}
-	
-	/**Assign the best chomosomes to the weights in the neural network*/
+
+	/** Assign the best chomosomes to the weights in the neural network */
 	private void commitWeights() {
 		for (int i = 0; i < genomes.length; i++) {
 			Genome<Double> genome = genomes[i];

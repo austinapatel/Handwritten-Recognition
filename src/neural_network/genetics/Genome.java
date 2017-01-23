@@ -8,18 +8,22 @@
 
 package neural_network.genetics;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /** Simulates a genome and genetic evolutionary algorithms. */
 public class Genome<E> {
 
 	private Chromosome<E>[] chromosomes;
-	private double breedRate;
+	private double breedRate, deathRate;
+	private int chromosomeSize;
 
-	public Genome(int chromosomeCount, int chromosomeSize, double breedRate) {
+	public Genome(int chromosomeCount, int chromosomeSize, double breedRate, double deathRate) {
 		chromosomes = new Chromosome[chromosomeCount];
 
 		this.breedRate = breedRate;
+		this.deathRate = deathRate;
+		this.chromosomeSize = chromosomeSize;
 
 		generateChromosomes(chromosomeSize);
 	}
@@ -31,21 +35,33 @@ public class Genome<E> {
 	public void nextGeneration() {
 		// Breed the best chromosomes
 		Arrays.sort(chromosomes);
+
+		// Breed the best part of the chromosomes
+		for (int i = 0; i < chromosomes.length * breedRate; i++)
+			chromosomes[i] = chromosomes[chromosomes.length - i - 1]
+					.cross(chromosomes[chromosomes.length - i - 2]);
+
+		// Mutate
+		for (int i = 0; i < chromosomes.length * 2; i++)
+			chromosomes[(int) (Math.random() * chromosomes.length)].mutate();
 		
-		chromosomes[9].cross(chromosomes[8]);
-		chromosomes[8].cross(chromosomes[7]);
-		chromosomes[7].cross(chromosomes[6]);
-		chromosomes[6].cross(chromosomes[5]);
-		chromosomes[5].cross(chromosomes[4]);
-		chromosomes[4].cross(chromosomes[3]);
-//		chromosomes[8].cross(chromosomes[7]);
-		chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int) (Math.random() * 10)]);
-		chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int) (Math.random() * 10)]);
-		chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int) (Math.random() * 10)]);
-		chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int) (Math.random() * 10)]);
-		chromosomes[0] = new Chromosome(randomValues(chromosomes[0].size()));
+//		Arrays.sort(chromosomes);
+//		for (int i = 0; i < chromosomes.length * deathRate; i++)
+//			chromosomes[i] = new Chromosome<E>((E[]) randomValues(chromosomeSize));
+		
+		// chromosomes[0] = chromosomes[9].cross(chromosomes[8]);
+		// chromosomes[1] = chromosomes[8].cross(chromosomes[7]);
+		// chromosomes[2] = chromosomes[7].cross(chromosomes[6]);
+		// chromosomes[4] = chromosomes[6].cross(chromosomes[5]);
+
+		// chromosomes[6].cross(chromosomes[5]);
+		// chromosomes[5].cross(chromosomes[4]);
+		// chromosomes[4].cross(chromosomes[3]);
+		// chromosomes[8].cross(chromosomes[7]);
+		// chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int)
+		// (Math.random() * 10)]);
 	}
-	
+
 	public Chromosome<E>[] getChromosomes() {
 		return chromosomes;
 	}
@@ -55,13 +71,13 @@ public class Genome<E> {
 		for (int i = 0; i < chromosomes.length; i++)
 			chromosomes[i] = new Chromosome(randomValues(chromosomeSize));
 	}
-	
+
 	private Double[] randomValues(int size) {
 		Double[] values = new Double[size];
 
 		for (int k = 0; k < size; k++)
 			values[k] = Math.random() - 0.5d;
-		
+
 		return values;
 	}
 

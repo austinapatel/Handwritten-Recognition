@@ -11,8 +11,9 @@ package neural_network.genetics;
 import java.util.ArrayList;
 
 /** Represents a specific chromosome in a genome. */
-@SuppressWarnings({ "unused", "serial" })
-public class Chromosome<E> extends ArrayList<E> implements Comparable<Chromosome<E>>{
+@SuppressWarnings("serial")
+public class Chromosome<E> extends ArrayList<E>
+		implements Comparable<Chromosome<E>> {
 
 	private double fitness;
 
@@ -26,29 +27,38 @@ public class Chromosome<E> extends ArrayList<E> implements Comparable<Chromosome
 	}
 
 	/**
-	 * Simulates the crossing of genetic information with another
-	 * "Chromosome".
+	 * Simulates the crossing of genetic information with another "Chromosome".
 	 */
-	public void cross(Chromosome<E> mate) {
-		ArrayList<E> newContent = new ArrayList<E>();
+	public Chromosome<E> cross(Chromosome<E> mate) {
+		E[] newContent = (E[]) new Object[size()];
 		int location = (int) (Math.random() * size());
 
 		for (int i = 0; i < size(); i++)
-			newContent.add((i < location) ? get(i) : mate.get(i));
-		
-		removeAll(this);
-		addAll(newContent);
+			newContent[i] = (i < location) ? get(i) : mate.get(i);
+
+		return new Chromosome<>(newContent);
+	}
+
+	/**
+	 * Simulates a mutation in a specific gene in the chromosome by changing a
+	 * random gene to a random decimal value.
+	 */
+	public void mutate() {
+		set((int) (Math.random() * size()), (E) (Object) Math.random());
 	}
 
 	public void setFitness(double fitness) {
 		this.fitness = fitness;
 	}
-	
+
 	public double getFitness() {
 		return fitness;
 	}
 
-	/**Returns positive if fitness > other, 0 if fitness = other and negative if fitness < other*/
+	/**
+	 * Returns positive if fitness > other, 0 if fitness = other and negative if
+	 * fitness < other
+	 */
 	@Override
 	public int compareTo(Chromosome<E> o) {
 		return Double.compare(fitness, o.getFitness());

@@ -128,25 +128,31 @@ public class Experimenter {
 		return new ExperimentalData(accuracy, cost);
 	}
 	
-//	public double testLetter(char letter) {
-//		ArrayList<LetterData> experimentalData = getExperimentalData(letter);
-//		int numCorrect = 0;
-//		
-//		for (LetterData data : experimentalData) {
-//			double[] output = neuralNetwork.getOutput(data.getData1D());
-//			
-//			int largestValueIndex = 0;
-//			for (int i = 0; i < output.length; i++)
-//				largestValueIndex = (output[i] > output[largestValueIndex]) ? i
-//						: largestValueIndex;
-//			
-//			char outputLetter = Alphabet.getCharacter(largestValueIndex);
-//			
-//			if (outputLetter == letter)
-//				numCorrect++;
-//		}
-//		
-//		return (double) numCorrect / experimentalData.size();
-//	}
+	public double testLetter(char letter) {
+		ArrayList<LetterData> experimentalData = getExperimentalData(letter);
+		int numCorrect = 0;
+		int count = 0;
+		
+		for (LetterData data : experimentalData) {
+			if (count > 10)
+				break;
+			
+			count++;
+			
+			double[] output = neuralNetwork.getOutput(data.getData1D());
+			
+			int largestValueIndex = 0;
+			for (int i = 0; i < output.length; i++)
+				largestValueIndex = (output[i] > output[largestValueIndex]) ? i
+						: largestValueIndex;
+			
+			char outputLetter = Alphabet.getCharacter(largestValueIndex);
+			
+			if (outputLetter == letter)
+				numCorrect++;
+		}
+		
+		return (double) numCorrect / count;
+	}
 
 }
