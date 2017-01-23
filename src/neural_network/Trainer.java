@@ -104,7 +104,7 @@ public class Trainer {
 		int count = 0;
 		for (LetterData letterData : shuffledData) {
 			if (count % 10 == 0)
-				System.out.println(((double)count/2600) * 100 + " %");
+				System.out.println(((double)count/2600) * 100 + "%");
 			
 			count++;
 			
