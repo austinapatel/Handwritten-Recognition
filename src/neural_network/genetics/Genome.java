@@ -34,42 +34,22 @@ public class Genome<E> {
 	 * procedures.
 	 */
 	public void nextGeneration() {
+		// Breed the best chromosomes
+		Arrays.sort(chromosomes);
 
-		new Thread(new Runnable() {
+		// Breed the best part of the chromosomes
+		for (int i = 0; i < chromosomes.length * breedRate; i++)
+			chromosomes[i] = chromosomes[chromosomes.length - i - 1]
+					.cross(chromosomes[chromosomes.length - i - 2]);
 
-			@Override
-			public void run() {
-				// Breed the best chromosomes
-				Arrays.sort(chromosomes);
+		// Mutate
+		for (int i = 0; i < chromosomes.length * 2; i++)
+			chromosomes[(int) (Math.random() * chromosomes.length)].mutate();
 
-				// Breed the best part of the chromosomes
-				for (int i = 0; i < chromosomes.length * breedRate; i++)
-					chromosomes[i] = chromosomes[chromosomes.length - i - 1]
-							.cross(chromosomes[chromosomes.length - i - 2]);
-
-				// Mutate
-				for (int i = 0; i < chromosomes.length * 2; i++)
-					chromosomes[(int) (Math.random() * chromosomes.length)]
-							.mutate();
-
-				Arrays.sort(chromosomes);
-				for (int i = 0; i < chromosomes.length * deathRate; i++)
-					chromosomes[i] = new Chromosome<E>(
-							(E[]) randomValues(chromosomeSize));
-			}
-		}).start();
-
-		// chromosomes[0] = chromosomes[9].cross(chromosomes[8]);
-		// chromosomes[1] = chromosomes[8].cross(chromosomes[7]);
-		// chromosomes[2] = chromosomes[7].cross(chromosomes[6]);
-		// chromosomes[4] = chromosomes[6].cross(chromosomes[5]);
-
-		// chromosomes[6].cross(chromosomes[5]);
-		// chromosomes[5].cross(chromosomes[4]);
-		// chromosomes[4].cross(chromosomes[3]);
-		// chromosomes[8].cross(chromosomes[7]);
-		// chromosomes[(int) (Math.random() * 10)].cross(chromosomes[(int)
-		// (Math.random() * 10)]);
+		// Arrays.sort(chromosomes);
+		// for (int i = 0; i < chromosomes.length * deathRate; i++)
+		// chromosomes[i] = new Chromosome<E>(
+		// (E[]) randomValues(chromosomeSize));
 	}
 
 	public Chromosome<E>[] getChromosomes() {

@@ -46,7 +46,7 @@ public class GeneticAlgorithm {
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 	}
 
-	private static final int CHROMOSOME_COUNT = 100, GENERATION_COUNT = 100;
+	private static final int CHROMOSOME_COUNT = 10, GENERATION_COUNT = 100;
 	private static final double BREED_RATE = 0.5d, DEATH_RATE = 0.1;
 
 	private NeuralNetwork neuralNetwork;
@@ -100,40 +100,45 @@ public class GeneticAlgorithm {
 		}
 	}
 
+	/**
+	 * Simulates a generation of evolution for each genome. Utilizes
+	 * multithreading for increased performance.
+	 */
 	public void nextGeneration() {
 		// Calculate fitness values
 		// Per neuron/letter
-		for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
-			Genome<Double> genome = genomes[letterIndex];
+		Thread[] workers = new Thread[neuralNetwork.getNeurons().length];
 
-			final int letterIndexFinal = letterIndex;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
+					final int letterIndexFinal = letterIndex;
+					
+					workers[letterIndex] = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							Genome<Double> genome = genomes[letterIndexFinal];
 
-			new Thread(new Runnable() {
-				@Override
+							for (Chromosome<Double> chromosome : genome
+									.getChromosomes())
+								calculateFitness(chromosome, letterIndexFinal);
 
-				public void run() {
-					// Evaluate the fitness of each chromosome/weight set (same
-					// letter)
-					for (Chromosome<Double> chromosome : genome
-							.getChromosomes())
-						calculateFitness(chromosome, letterIndexFinal);
+							genome.nextGeneration();
+						}
+					});
 
-					// Begin the breeding process of the current genome
-					genome.nextGeneration();
+					workers[letterIndexFinal].start();
 				}
+			}
+		}).run();
 
-			}).start();
+		try {
+			for (Thread thread : workers)
+				thread.join();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		// for (Chromosome<Double> chromosome : genomes[0].getChromosomes())
-		// {
-		// System.out.println(chromosome.getFitness());
-		// }
-		// System.out.println(
-		// genomes[0].getChromosomes()[CHROMOSOME_COUNT - 1].getFitness());
-
-		commitWeights();
-
 	}
 
 	/** Evaluates the fitness of a specific chromosome. */

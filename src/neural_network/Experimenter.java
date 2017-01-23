@@ -134,8 +134,8 @@ public class Experimenter {
 		int count = 0;
 		
 		for (LetterData data : experimentalData) {
-			if (count > 10)
-				break;
+//			if (count > 10)
+//				break;
 			
 			count++;
 			
