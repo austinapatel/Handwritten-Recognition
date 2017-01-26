@@ -27,17 +27,17 @@ public class Trainer {
 
 	public static void main(String[] args) {
 		LearningMethod[] learningMethods = new LearningMethod[] {
-				new BackpropagationAlgorithm(0.1),
-				new BackpropagationAlgorithm(0.2),
-				new BackpropagationAlgorithm(0.3),
-				new BackpropagationAlgorithm(0.4),
-				new BackpropagationAlgorithm(0.5),
-				new BackpropagationAlgorithm(0.6),
-				new BackpropagationAlgorithm(0.6),
-				new BackpropagationAlgorithm(0.7),
-				new BackpropagationAlgorithm(0.8),
-				new BackpropagationAlgorithm(0.9),
-				new BackpropagationAlgorithm(1),
+//				new BackpropagationAlgorithm(0.1),
+//				new BackpropagationAlgorithm(0.2),
+//				new BackpropagationAlgorithm(0.3),
+//				new BackpropagationAlgorithm(0.4),
+//				new BackpropagationAlgorithm(0.5),
+//				new BackpropagationAlgorithm(0.6),
+//				new BackpropagationAlgorithm(0.6),
+//				new BackpropagationAlgorithm(0.7),
+//				new BackpropagationAlgorithm(0.8),
+//				new BackpropagationAlgorithm(0.9),
+//				new BackpropagationAlgorithm(1),
 
 				new GeneticAlgorithmLearningMethod(
 						new GeneticAlgorithm(25, DEFAULT_GENERATIONS,
@@ -98,7 +98,10 @@ public class Trainer {
 			for (LearningMethod learningMethod : learningMethods) {
 				NeuralNetwork neuralNetwork = new NeuralNetwork(learningMethod,
 						Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
-						Alphabet.getLength());	
+						Alphabet.getLength());
+				
+				if (learningMethod.getName().equals(GeneticAlgorithmLearningMethod.NAME))
+					((GeneticAlgorithmLearningMethod) learningMethod).getGeneticAlgorithm().setNeuralNetwork(neuralNetwork);
 				
 				Trainer trainer = new Trainer(neuralNetwork, true, learningMethod.getFileName() + "T" + trial);
 				
