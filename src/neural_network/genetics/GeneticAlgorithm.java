@@ -34,7 +34,7 @@ public class GeneticAlgorithm {
 				.testNetwork(experimenter.getExperimentalData());
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 
-		new GeneticAlgorithm() {
+		new GeneticAlgorithm(100, 200, 0.7d, 0.01d) {
 			{
 				setNeuralNetwork(neuralNetwork);
 				beginEvolution();
@@ -46,16 +46,19 @@ public class GeneticAlgorithm {
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 	}
 
-	private static final int CHROMOSOME_COUNT = 10, GENERATION_COUNT = 100;
-	private static final double BREED_RATE = 0.5d, DEATH_RATE = 0.1;
-
 	private NeuralNetwork neuralNetwork;
 	private Genome<Double>[] genomes;
 	private Experimenter experimenter;
 	private ArrayList<LetterData[]> experimentalLetterData;
+	private int chromsosomeCount, generationCount;
+	private double breedRate, deathRate;
 
-	public GeneticAlgorithm() {
-
+	public GeneticAlgorithm(int chromosomeCount, int generationCount,
+			double breedRate, double deathRate) {
+		this.chromsosomeCount = chromosomeCount;
+		this.generationCount = generationCount;
+		this.breedRate = breedRate;
+		this.deathRate = deathRate;
 	}
 
 	/** Add the neural network and begins the setup procedure. */
@@ -67,9 +70,9 @@ public class GeneticAlgorithm {
 
 		// Initialize each genome
 		for (int i = 0; i < genomes.length; i++)
-			genomes[i] = new Genome<Double>(CHROMOSOME_COUNT,
-					Constants.GRID_WIDTH * Constants.GRID_HEIGHT, BREED_RATE,
-					DEATH_RATE);
+			genomes[i] = new Genome<Double>(chromsosomeCount,
+					Constants.GRID_WIDTH * Constants.GRID_HEIGHT, breedRate,
+					deathRate);
 
 		// Load all experimental letters
 		experimentalLetterData = new ArrayList<LetterData[]>();
@@ -94,7 +97,7 @@ public class GeneticAlgorithm {
 	 * then evolve them by breeding the most fit.
 	 */
 	public void beginEvolution() {
-		for (int generation = 0; generation < GENERATION_COUNT; generation++) {
+		for (int generation = 0; generation < generationCount; generation++) {
 			// System.out.println("GENERATION #" + (generation + 1));
 			nextGeneration();
 		}
@@ -114,7 +117,7 @@ public class GeneticAlgorithm {
 			public void run() {
 				for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
 					final int letterIndexFinal = letterIndex;
-					
+
 					workers[letterIndex] = new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -172,7 +175,7 @@ public class GeneticAlgorithm {
 		for (int i = 0; i < genomes.length; i++) {
 			Genome<Double> genome = genomes[i];
 			Chromosome<Double> chromosome = genome
-					.getChromosomes()[CHROMOSOME_COUNT - 1];
+					.getChromosomes()[chromsosomeCount - 1];
 			double[] weights = new double[chromosome.size()];
 
 			for (int k = 0; k < weights.length; k++)
@@ -180,6 +183,22 @@ public class GeneticAlgorithm {
 
 			neuralNetwork.getNeurons()[i].setWeights(weights);
 		}
+	}
+	
+	public int getChromsosomeCount() {
+		return chromsosomeCount;
+	}
+
+	public int getGenerationCount() {
+		return generationCount;
+	}
+
+	public double getBreedRate() {
+		return breedRate;
+	}
+
+	public double getDeathRate() {
+		return deathRate;
 	}
 
 }

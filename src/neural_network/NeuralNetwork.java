@@ -13,9 +13,7 @@ package neural_network;
  * capabilities.
  */
 public class NeuralNetwork {
-	
-	public static double LEARNING_RATE = 0.1d;
-	
+		
 	private Neuron[] neurons;
 	private LearningMethod learningMethod;
 	

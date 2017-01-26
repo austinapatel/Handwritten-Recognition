@@ -18,7 +18,7 @@ import neural_network.genetics.GeneticAlgorithm;
  */
 public class GeneticAlgorithmLearningMethod extends LearningMethod {
 
-	private final String NAME = "GeneticAlgorithm";
+	public static final String NAME = "GeneticAlgorithm";
 
 	private GeneticAlgorithm geneticAlgorithm;
 
@@ -29,7 +29,11 @@ public class GeneticAlgorithmLearningMethod extends LearningMethod {
 	@Override
 	public double getWeightDelta(double error, int input) {
 		return 0;
-	}	
+	}
+	
+	public GeneticAlgorithm getGeneticAlgorithm() {
+		return geneticAlgorithm;
+	}
 
 	@Override
 	public String getName() {
@@ -39,6 +43,15 @@ public class GeneticAlgorithmLearningMethod extends LearningMethod {
 	@Override
 	public void onLearningCycleComplete() {
 		geneticAlgorithm.nextGeneration();		
+	}
+
+	@Override
+	public String getFileName() {
+		return "GA-" + "Chromosomes"
+					 + geneticAlgorithm.getChromsosomeCount() + "Generations"
+					 + geneticAlgorithm.getGenerationCount() + "Breed"
+					 + geneticAlgorithm.getBreedRate() + "Death"
+					 + geneticAlgorithm.getDeathRate();
 	}
 
 }

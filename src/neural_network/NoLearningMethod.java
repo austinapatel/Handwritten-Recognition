@@ -31,5 +31,10 @@ public class NoLearningMethod extends LearningMethod {
 	public void onLearningCycleComplete() {
 		
 	}
+
+	@Override
+	public String getFileName() {
+		return "NLR";
+	}
 	
 }

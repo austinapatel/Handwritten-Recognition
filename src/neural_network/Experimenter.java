@@ -27,12 +27,12 @@ public class Experimenter {
 	
 	public static void main(String[] args) {
 		NeuralNetwork drawingNetwork = new NeuralNetwork(
-				new BackpropagationAlgorithm(),
+				new BackpropagationAlgorithm(0.1),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
 
 		Trainer trainer = new Trainer(drawingNetwork);
-		trainer.trainNetwork(false);
+		trainer.trainNetwork();
 
 		Experimenter experimenter = new Experimenter(drawingNetwork);
 		experimenter.testNetwork(experimenter.getExperimentalData());

@@ -84,14 +84,10 @@ public class Interface extends JFrame {
 	}
 	
 	private void initializeNetwork() {
-		drawingNetwork = new NeuralNetwork(new BackpropagationAlgorithm(), 400, 26);
+		drawingNetwork = new NeuralNetwork(new BackpropagationAlgorithm(0.1), 400, 26);
 
 		Trainer trainer = new Trainer(drawingNetwork);
-		trainer.trainNetwork(false);
-		trainer.trainNetwork(false);
-		trainer.trainNetwork(false);
-		trainer.trainNetwork(false);
-		trainer.trainNetwork(false);
+		trainer.trainNetwork();
 	}
 	
 	private void addDrawingPredictionPanel() {

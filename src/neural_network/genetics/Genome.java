@@ -46,10 +46,10 @@ public class Genome<E> {
 		for (int i = 0; i < chromosomes.length * 2; i++)
 			chromosomes[(int) (Math.random() * chromosomes.length)].mutate();
 
-		// Arrays.sort(chromosomes);
-		// for (int i = 0; i < chromosomes.length * deathRate; i++)
-		// chromosomes[i] = new Chromosome<E>(
-		// (E[]) randomValues(chromosomeSize));
+		Arrays.sort(chromosomes);
+		for (int i = 0; i < chromosomes.length * deathRate; i++)
+			chromosomes[i] = new Chromosome<E>(
+					(E[]) randomValues(chromosomeSize));
 	}
 
 	public Chromosome<E>[] getChromosomes() {

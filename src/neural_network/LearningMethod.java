@@ -16,5 +16,7 @@ public abstract class LearningMethod {
 	public abstract String getName();
 	
 	public abstract void onLearningCycleComplete();
+	
+	public abstract String getFileName();
 
 }
