@@ -56,20 +56,8 @@ public class FileManager {
 
 		return null;
 	}
-	
-	public static byte[] readByteFileContent(String filePath) {
-		filePath = getAbsolutePath(filePath);
-		
-		try {
-			return Files.readAllBytes(Paths.get(filePath));
-		} catch (IOException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
 
-	private static String getAbsolutePath(String filePath) {
+	public static String getAbsolutePath(String filePath) {
 		return System.getProperty("user.dir")
 				+ filePath.replace(System.getProperty("user.dir"), "");
 	}
@@ -87,6 +75,10 @@ public class FileManager {
 			File file = new File(filePath);
 			if (!file.exists())
 				file.createNewFile();
+			else if (file.exists() && !append) {
+				file.delete();
+				file.createNewFile();
+			}
 			else if (append)
 				content = "\n" + content;
 

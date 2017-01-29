@@ -16,10 +16,12 @@ public class Neuron {
 	private int inputCount;
 	private double[] weights;
 	private LearningMethod learningMethod;
+	private int id;
 	
-	public Neuron(LearningMethod learningMethod, int inputCount) {
+	public Neuron(LearningMethod learningMethod, int inputCount, int id) {
 		this.learningMethod = learningMethod;
 		this.inputCount = inputCount;
+		this.id = id;
 		
 		randomizeWeights();
 	}
@@ -50,7 +52,7 @@ public class Neuron {
 	
 	public void learn(double error, int[] inputs) {
 		for (int i = 0; i < weights.length; i++)
-			weights[i] += learningMethod.getWeightDelta(error, inputs[i]);
+			weights[i] += learningMethod.getWeightDelta(error, inputs[i], id, i);
 	}
 
 }

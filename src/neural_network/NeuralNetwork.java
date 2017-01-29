@@ -23,7 +23,7 @@ public class NeuralNetwork {
 		this.learningMethod = learningMethod;
 		
 		for (int i = 0; i < neurons.length; i++)
-			neurons[i] = new Neuron(learningMethod, inputCount);
+			neurons[i] = new Neuron(learningMethod, inputCount, i);
 	}
 	
 	public double[] getOutput(int[] inputs) {

@@ -27,7 +27,7 @@ public class GeneticAlgorithmLearningMethod extends LearningMethod {
 	}
 
 	@Override
-	public double getWeightDelta(double error, int input) {
+	public double getWeightDelta(double error, int input, int neuronId, int weightId) {
 		return 0;
 	}
 	
@@ -41,13 +41,13 @@ public class GeneticAlgorithmLearningMethod extends LearningMethod {
 	}
 
 	@Override
-	public void onLearningCycleComplete() {
+	public void onLearningCycleStart() {
 		geneticAlgorithm.nextGeneration();		
 	}
 
 	@Override
 	public String getFileName() {
-		return "GA-" + "Chromosomes"
+		return "GA-Chromosomes"
 					 + geneticAlgorithm.getChromsosomeCount() + "Generations"
 					 + geneticAlgorithm.getGenerationCount() + "Breed"
 					 + geneticAlgorithm.getBreedRate() + "Death"

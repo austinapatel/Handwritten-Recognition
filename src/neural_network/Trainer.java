@@ -8,7 +8,6 @@
 
 package neural_network;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import data.Alphabet;
@@ -21,101 +20,143 @@ import neural_network.genetics.GeneticAlgorithm;
 /** Uses training "LetterData" as inputs to teach the neural network. */
 public class Trainer {
 
-	private static int TRIALS = 3;
-	private static int DEFAULT_GENERATIONS = 100, DEFAULT_CHROMOSOMES = 100;
+	private static int TRIALS = 1;
+	private static int DEFAULT_GENERATIONS = 100, DEFAULT_CHROMOSOMES = 100,
+			TEST_COUNT = 1;
 	private static double DEFAULT_BREED_RATE = 0.9, DEFAULT_DEATH_RATE = 0.00;
+
+	private String accuracyFileContent, costFileContent;
 
 	public static void main(String[] args) {
 		LearningMethod[] learningMethods = new LearningMethod[] {
-//				new BackpropagationAlgorithm(0.1),
-//				new BackpropagationAlgorithm(0.2),
-//				new BackpropagationAlgorithm(0.3),
-//				new BackpropagationAlgorithm(0.4),
-//				new BackpropagationAlgorithm(0.5),
-//				new BackpropagationAlgorithm(0.6),
-//				new BackpropagationAlgorithm(0.6),
-//				new BackpropagationAlgorithm(0.7),
-//				new BackpropagationAlgorithm(0.8),
-//				new BackpropagationAlgorithm(0.9),
-//				new BackpropagationAlgorithm(1),
-
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(25, DEFAULT_GENERATIONS,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(50, DEFAULT_GENERATIONS,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(75, DEFAULT_GENERATIONS,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(100, DEFAULT_GENERATIONS,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES, 25,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES, 50,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES, 75,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES, 100,
-								DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, 0.25, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, 0.50, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, 0.75, DEFAULT_DEATH_RATE)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, 1, DEFAULT_DEATH_RATE)),
-
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.01)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.02)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.03)),
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-								DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.04)),
+				// new BackpropagationAlgorithm(0),
+				// new BackpropagationAlgorithm(0.025),
+				// new BackpropagationAlgorithm(0.05),
+				// new BackpropagationAlgorithm(0.1),
+				// new BackpropagationAlgorithm(0.2),
+				// new BackpropagationAlgorithm(0.3),
+				// new BackpropagationAlgorithm(0.4),
+				// new BackpropagationAlgorithm(0.5)
+				// new BackpropagationAlgorithm(0.6),
+				// new BackpropagationAlgorithm(0.6),
+				// new BackpropagationAlgorithm(0.7),
+				// new BackpropagationAlgorithm(0.8),
+				// new BackpropagationAlgorithm(0.9),
+				// new BackpropagationAlgorithm(1),
+				// new BackpropagationAlgorithm(1.5),
+				// new BackpropagationAlgorithm(2),
+				//
 				new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
 						DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
-						DEFAULT_BREED_RATE, 0.05)) };
+						DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				//
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(10, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(25, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(50, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(75, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(100, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(125, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				//
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(150, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
+				//
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.125, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.25, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.50, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.75, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.8, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 0.9, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, 1, DEFAULT_DEATH_RATE)),
+				//
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.01)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.02)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.03)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.04)),
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, 0.05)),
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, 0.1)),
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, 0.15)),
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
+				// DEFAULT_BREED_RATE, 0.2))
+		};
 
 		for (int trial = 1; trial <= TRIALS; trial++)
 			for (LearningMethod learningMethod : learningMethods) {
 				NeuralNetwork neuralNetwork = new NeuralNetwork(learningMethod,
 						Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 						Alphabet.getLength());
-				
-				if (learningMethod.getName().equals(GeneticAlgorithmLearningMethod.NAME))
-					((GeneticAlgorithmLearningMethod) learningMethod).getGeneticAlgorithm().setNeuralNetwork(neuralNetwork);
-				
-				Trainer trainer = new Trainer(neuralNetwork, true, learningMethod.getFileName() + "T" + trial);
-				
+
+				if (learningMethod.getName()
+						.equals(GeneticAlgorithmLearningMethod.NAME))
+					((GeneticAlgorithmLearningMethod) learningMethod)
+							.getGeneticAlgorithm()
+							.setNeuralNetwork(neuralNetwork);
+
+				Trainer trainer = new Trainer(neuralNetwork, true,
+						learningMethod.getFileName() + "T" + trial);
+
 				trainer.trainNetwork();
 			}
 	}
 
+	private static boolean init;
+	private static ArrayList<LetterData> trainingLetterData;
+	private static int[][] actualValues;
+
 	private NeuralNetwork neuralNetwork;
 	private Experimenter experimenter;
-	private ArrayList<LetterData> experimentalLetterData;
 	private String accuracyPath, costPath;
 	private String fileName;
 	private boolean debug;
 
+	/**
+	 * Initializes the Trainer with debugging capabilities including file output
+	 * and progress measurement.
+	 */
 	public Trainer(NeuralNetwork neuralNetwork, boolean debug,
 			String fileName) {
 		this.neuralNetwork = neuralNetwork;
@@ -124,48 +165,41 @@ public class Trainer {
 
 		experimenter = new Experimenter(neuralNetwork);
 
-		if (debug) {
-			for (char letter : Alphabet.getCharacterArray()) {
-				String path = "/" + Constants.OUTPUT_DATA_FOLDER + "/" + letter
-						+ ".txt";
-				File file = new File(path);
-				if (file.exists())
-					file.delete();
+		accuracyPath = "/" + Constants.OUTPUT_DATA_FOLDER + "/" + fileName
+				+ "Accuracy" + ".txt";
 
-				accuracyPath = "/" + Constants.OUTPUT_DATA_FOLDER + "/"
-						+ fileName + "Accuracy" + ".txt";
-				file = new File(accuracyPath);
-				if (file.exists())
-					file.delete();
+		costPath = "/" + Constants.OUTPUT_DATA_FOLDER + "/" + fileName + "Cost"
+				+ ".txt";
 
-				costPath = "/" + Constants.OUTPUT_DATA_FOLDER + "/" + fileName
-						+ "Cost" + ".txt";
-				file = new File(costPath);
-				if (file.exists())
-					file.delete();
-			}
-
-		}
-
-		experimentalLetterData = experimenter.getExperimentalData();
+		if (!Trainer.init)
+			init();
 	}
 
-	// Assumes debug false
+	/** Assumes debug false. */
 	public Trainer(NeuralNetwork neuralNetwork) {
 		this(neuralNetwork, false, "");
 	}
 
-	public void trainNetwork() {
-		System.out.println(fileName);
+	/** Initializes data required by the trainer. */
+	public static void init() {
+		Trainer.loadLetterData();
+		Trainer.init = true;
 
-		boolean isGenetic = false;
-		if (neuralNetwork.getLearningMethod().getName()
-				.equals(GeneticAlgorithmLearningMethod.NAME))
-			isGenetic = true;
+		Trainer.actualValues = new int[Alphabet
+				.getLength()][Constants.GRID_WIDTH * Constants.GRID_HEIGHT];
 
-		String accuracyFileContent = "", costFileContent = "";
-		ArrayList<LetterData> trainingData = new ArrayList<LetterData>();
-		LearningMethod learningMethod = neuralNetwork.getLearningMethod();
+		for (int i = 0; i < actualValues.length; i++) {
+			char cur = Alphabet.getCharacter(i);
+
+			Trainer.actualValues[i] = Trainer.getActualValues(cur);
+		}
+	}
+
+	/** Loads experimental and training data. */
+	private static void loadLetterData() {
+		// Load training data
+		ArrayList<LetterData> tempData = new ArrayList<LetterData>();
+		trainingLetterData = new ArrayList<LetterData>();
 
 		for (char c : Alphabet.getAlphabet().toCharArray()) {
 			String filePath = Constants.RESOURCES_PATH
@@ -174,77 +208,108 @@ public class Trainer {
 					c);
 
 			for (LetterData letterData : currentLetterData)
-				trainingData.add(letterData);
+				tempData.add(letterData);
 		}
 
-		ArrayList<LetterData> shuffledData = new ArrayList<LetterData>();
+		// Shuffle the training data
+		while (!tempData.isEmpty())
+			trainingLetterData.add(
+					tempData.remove((int) (Math.random() * tempData.size())));
+	}
 
-		// Shuffle the data so that the trainer doesn't learn one character at a
-		// time and then forget it
-		// Need to make the training data in a constant order while actually
-		// experimenting
-		while (!trainingData.isEmpty())
-			shuffledData.add(trainingData
-					.remove((int) (Math.random() * trainingData.size())));
+	/**
+	 * Trains the neural network using its learning method and handles for
+	 * Genetic Algorithm learning additionally.
+	 */
+	public void trainNetwork() {
+		if (debug)
+			System.out.println(fileName);
 
-		if (isGenetic) {
-			GeneticAlgorithm geneticAlgorithm = ((GeneticAlgorithmLearningMethod) neuralNetwork
-					.getLearningMethod()).getGeneticAlgorithm();
+		accuracyFileContent = "";
+		costFileContent = "";
 
-			shuffledData = new ArrayList<LetterData>();
-			for (int i = 0; i < geneticAlgorithm.getGenerationCount(); i++)
-				shuffledData.add(null);
-		}
+		// Initially test the neural networks's capabilities
+		if (debug)
+			testNetwork();
 
-		int count = 0;
+		// Prepare for testing the network
+		LearningMethod learningMethod = neuralNetwork.getLearningMethod();
+
+		boolean isGenetic = learningMethod.getName()
+				.equals(GeneticAlgorithmLearningMethod.NAME);
+
+		int totalIterations = 0;
+		if (isGenetic)
+			totalIterations = ((GeneticAlgorithmLearningMethod) learningMethod)
+					.getGeneticAlgorithm().getGenerationCount();
+		else
+			totalIterations = trainingLetterData.size();
+
+		// Loop through each letter or generation
 		int lastPercent = -1;
-		for (LetterData letterData : shuffledData) {
-			// if (count % 10 == 0)
-			// System.out.println(
-			// ((double) count / shuffledData.size()) * 100 + "%");
+		int testIncrement = totalIterations / TEST_COUNT;
+		boolean testThisIteration = false;
 
-			int percent = (int) ((double) count / shuffledData.size() * 100);
+		for (int i = 0; i < totalIterations; i++) {
+			// Progress calculations
+			int percent = (int) ((double) i / totalIterations * 100);
 
 			if (percent % 10 == 0 && percent != lastPercent) {
-				System.out.println(percent + "%");
+				if (debug)
+					System.out.println(percent + "%");
 				lastPercent = percent;
 			}
 
-			count++;
+			testThisIteration = (i % testIncrement == 0) && i != 0;
+
+			// Learning process
+			learningMethod.onLearningCycleStart();
 
 			if (!isGenetic) {
-				int[] actualValues = new int[Alphabet.getAlphabet().length()];
+				LetterData letterData = trainingLetterData.get(i);
 
-				for (int i = 0; i < actualValues.length; i++)
-					actualValues[i] = 0;
-
-				actualValues[Alphabet
-						.getLocation(letterData.getCharacter())] = 1;
-
-				neuralNetwork.learn(letterData.getData1D(), actualValues);
+				neuralNetwork.learn(letterData.getData1D(),
+						Trainer.actualValues[Alphabet
+								.indexOf(letterData.getCharacter())]);
 			}
 
-			if (debug) {
-				ExperimentalData experimentalData = experimenter
-						.testNetwork(experimentalLetterData);
-
-				accuracyFileContent += String
-						.valueOf(experimentalData.getAccuracy()) + "\n";
-
-				costFileContent += String.valueOf(experimentalData.getCost())
-						+ "\n";
-			}
-
-			learningMethod.onLearningCycleComplete();
+			if (debug && testThisIteration)
+				testNetwork();
 		}
 
 		if (debug) {
+			testNetwork();
+
 			System.out.println("100%");
 			FileManager.writeFileContent(accuracyPath, accuracyFileContent,
-					true);
+					false);
 
-			FileManager.writeFileContent(costPath, costFileContent, true);
+			FileManager.writeFileContent(costPath, costFileContent, false);
 		}
+	}
+
+	/** Tests the network and saves its data. */
+	private void testNetwork() {
+		ExperimentalData experimentalData = experimenter.testNetwork();
+
+		accuracyFileContent += String.valueOf(experimentalData.getAccuracy())
+				+ "\n";
+
+		costFileContent += String.valueOf(experimentalData.getCost()) + "\n";
+	}
+
+	/**
+	 * Returns the results expected from the neural network for a given letter.
+	 */
+	private static int[] getActualValues(char c) {
+		int[] actualValues = new int[Alphabet.getAlphabet().length()];
+
+		for (int i = 0; i < actualValues.length; i++)
+			actualValues[i] = 0;
+
+		actualValues[Alphabet.getLocation(c)] = 1;
+
+		return actualValues;
 	}
 
 }

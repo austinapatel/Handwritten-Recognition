@@ -12,14 +12,14 @@ package neural_network;
 public class BackpropagationAlgorithm extends LearningMethod {
 
 	public static final String NAME = "Backpropagation";
-	private double learningRate;
+	protected double learningRate;
 	
 	public BackpropagationAlgorithm(double learningRate) {
 		this.learningRate = learningRate;
 	}
 
 	@Override
-	public double getWeightDelta(double error, int input) {
+	public double getWeightDelta(double error, int input, int neuronId, int weightId) {
 		return error * input * learningRate;
 	}
 	
@@ -37,7 +37,7 @@ public class BackpropagationAlgorithm extends LearningMethod {
 	}
 
 	@Override
-	public void onLearningCycleComplete() {
+	public void onLearningCycleStart() {
 		
 	}
 

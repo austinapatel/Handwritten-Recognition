@@ -8,7 +8,6 @@
 
 package neural_network.genetics;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /** Simulates a genome and genetic evolutionary algorithms. */
@@ -46,10 +45,12 @@ public class Genome<E> {
 		for (int i = 0; i < chromosomes.length * 2; i++)
 			chromosomes[(int) (Math.random() * chromosomes.length)].mutate();
 
-		Arrays.sort(chromosomes);
-		for (int i = 0; i < chromosomes.length * deathRate; i++)
-			chromosomes[i] = new Chromosome<E>(
-					(E[]) randomValues(chromosomeSize));
+		if (deathRate != 0) {
+			Arrays.sort(chromosomes);
+			for (int i = 0; i < chromosomes.length * deathRate; i++)
+				chromosomes[i] = new Chromosome<E>(
+						(E[]) randomValues(chromosomeSize));
+		}
 	}
 
 	public Chromosome<E>[] getChromosomes() {
@@ -66,7 +67,7 @@ public class Genome<E> {
 		Double[] values = new Double[size];
 
 		for (int k = 0; k < size; k++)
-			values[k] = Math.random() - 0.5d;
+			values[k] = Math.random() - 0.5;
 
 		return values;
 	}

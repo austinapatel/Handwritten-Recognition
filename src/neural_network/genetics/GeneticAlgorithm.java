@@ -16,7 +16,6 @@ import data.ExperimentalData;
 import data.LetterData;
 import neural_network.Experimenter;
 import neural_network.NeuralNetwork;
-import neural_network.Neuron;
 import neural_network.NoLearningMethod;
 
 /**
@@ -30,19 +29,17 @@ public class GeneticAlgorithm {
 				Alphabet.getLength());
 
 		Experimenter experimenter = new Experimenter(neuralNetwork);
-		ExperimentalData experimentalData = experimenter
-				.testNetwork(experimenter.getExperimentalData());
+		ExperimentalData experimentalData = experimenter.testNetwork();
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 
-		new GeneticAlgorithm(100, 200, 0.7d, 0.01d) {
+		new GeneticAlgorithm(100, 100, 0.9d, 0) {
 			{
 				setNeuralNetwork(neuralNetwork);
 				beginEvolution();
 			}
 		};
 
-		experimentalData = experimenter
-				.testNetwork(experimenter.getExperimentalData());
+		experimentalData = experimenter.testNetwork();
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 	}
 
@@ -108,33 +105,30 @@ public class GeneticAlgorithm {
 	 * multithreading for increased performance.
 	 */
 	public void nextGeneration() {
+		long startTime = System.currentTimeMillis();
+		// System.out.println("B" + startTime);
 		// Calculate fitness values
 		// Per neuron/letter
 		Thread[] workers = new Thread[neuralNetwork.getNeurons().length];
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
-					final int letterIndexFinal = letterIndex;
+		for (int letterIndex = 0; letterIndex < genomes.length; letterIndex++) {
+			final int letterIndexFinal = letterIndex;
 
-					workers[letterIndex] = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							Genome<Double> genome = genomes[letterIndexFinal];
+			workers[letterIndex] = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Genome<Double> genome = genomes[letterIndexFinal];
 
-							for (Chromosome<Double> chromosome : genome
-									.getChromosomes())
-								calculateFitness(chromosome, letterIndexFinal);
+					for (Chromosome<Double> chromosome : genome
+							.getChromosomes())
+						calculateFitness(chromosome, letterIndexFinal);
 
-							genome.nextGeneration();
-						}
-					});
-
-					workers[letterIndexFinal].start();
+					genome.nextGeneration();
 				}
-			}
-		}).run();
+			});
+
+			workers[letterIndexFinal].start();
+		}
 
 		try {
 			for (Thread thread : workers)
@@ -142,6 +136,8 @@ public class GeneticAlgorithm {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		System.out.println((System.currentTimeMillis() - startTime));
 	}
 
 	/** Evaluates the fitness of a specific chromosome. */
@@ -153,38 +149,31 @@ public class GeneticAlgorithm {
 		for (int i = 0; i < weights.length; i++)
 			weights[i] = chromosome.get(i);
 
-		Neuron neuron = neuralNetwork.getNeurons()[letterIndex];
-		neuron.setWeights(weights);
+		neuralNetwork.getNeurons()[letterIndex].setWeights(weights);
 
-		// Evaluate the average fitness
-		double fitness = 0;
-
-		// for (LetterData letterData : experimentalLetterData.get(letterIndex))
-		// fitness += neuron.getOutput(letterData.getData1D());
-
-		fitness = experimenter.testLetter(Alphabet.getCharacter(letterIndex));
-
-		// fitness = fitness / (experimentalLetterData.get(letterIndex).length);
+		// Evaluate the fitness
+		double fitness = experimenter
+				.testLetter(Alphabet.getCharacter(letterIndex));
 
 		// Set the chromosomes fitness
 		chromosome.setFitness(fitness);
 	}
 
 	/** Assign the best chomosomes to the weights in the neural network */
-	private void commitWeights() {
-		for (int i = 0; i < genomes.length; i++) {
-			Genome<Double> genome = genomes[i];
-			Chromosome<Double> chromosome = genome
-					.getChromosomes()[chromsosomeCount - 1];
-			double[] weights = new double[chromosome.size()];
+	// public void commitWeights() {
+	// for (int i = 0; i < genomes.length; i++) {
+	// Genome<Double> genome = genomes[i];
+	// Chromosome<Double> chromosome = genome
+	// .getChromosomes()[chromsosomeCount - 1];
+	// double[] weights = new double[chromosome.size()];
+	//
+	// for (int k = 0; k < weights.length; k++)
+	// weights[k] = chromosome.get(k);
+	//
+	// neuralNetwork.getNeurons()[i].setWeights(weights);
+	// }
+	// }
 
-			for (int k = 0; k < weights.length; k++)
-				weights[k] = chromosome.get(k);
-
-			neuralNetwork.getNeurons()[i].setWeights(weights);
-		}
-	}
-	
 	public int getChromsosomeCount() {
 		return chromsosomeCount;
 	}

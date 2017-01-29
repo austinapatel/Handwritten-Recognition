@@ -18,7 +18,7 @@ public class NoLearningMethod extends LearningMethod {
 	}
 
 	@Override
-	public double getWeightDelta(double error, int input) {
+	public double getWeightDelta(double error, int input, int neuronId, int weightId) {
 		return 0;
 	}
 
@@ -28,7 +28,7 @@ public class NoLearningMethod extends LearningMethod {
 	}
 
 	@Override
-	public void onLearningCycleComplete() {
+	public void onLearningCycleStart() {
 		
 	}
 
