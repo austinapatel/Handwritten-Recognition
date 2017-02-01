@@ -16,7 +16,7 @@ import data.LetterData;
 public class LearningDecayBackpropagationAlgorithm extends BackpropagationAlgorithm {
 
 	public static final String NAME = "LearningDecay";
-	private static final int DECAY_CONSTANT = 10;
+	private static final int DECAY_CONSTANT = 1000;
 	
 	private double finalRate, initialRate;
 	

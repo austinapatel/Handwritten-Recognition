@@ -20,55 +20,36 @@ import neural_network.genetics.GeneticAlgorithm;
 /** Uses training "LetterData" as inputs to teach the neural network. */
 public class Trainer {
 
-	private static int TRIALS = 1;
+	private static int TRIALS = 1, LETTER_MULTIPLIER = 4;
 	private static int DEFAULT_GENERATIONS = 100, DEFAULT_CHROMOSOMES = 100,
-			TEST_COUNT = 1;
+			TEST_COUNT = 100 * LETTER_MULTIPLIER;
 	private static double DEFAULT_BREED_RATE = 0.9, DEFAULT_DEATH_RATE = 0.00;
 
 	private String accuracyFileContent, costFileContent;
 
 	public static void main(String[] args) {
 		LearningMethod[] learningMethods = new LearningMethod[] {
-				// new BackpropagationAlgorithm(0),
-				// new BackpropagationAlgorithm(0.025),
-				// new BackpropagationAlgorithm(0.05),
-				// new BackpropagationAlgorithm(0.1),
-				// new BackpropagationAlgorithm(0.2),
-				// new BackpropagationAlgorithm(0.3),
-				// new BackpropagationAlgorithm(0.4),
-				// new BackpropagationAlgorithm(0.5)
-				// new BackpropagationAlgorithm(0.6),
-				// new BackpropagationAlgorithm(0.6),
-				// new BackpropagationAlgorithm(0.7),
-				// new BackpropagationAlgorithm(0.8),
-				// new BackpropagationAlgorithm(0.9),
-				// new BackpropagationAlgorithm(1),
-				// new BackpropagationAlgorithm(1.5),
-				// new BackpropagationAlgorithm(2),
+				 new BackpropagationAlgorithm(0),
+				 new BackpropagationAlgorithm(0.025),
+				 new BackpropagationAlgorithm(0.05),
+				 new BackpropagationAlgorithm(0.1),
+				 new BackpropagationAlgorithm(0.2),
+				 new BackpropagationAlgorithm(0.3),
+				 new BackpropagationAlgorithm(0.4),
+				 new BackpropagationAlgorithm(0.5),
+				 new BackpropagationAlgorithm(0.6),
+				 new BackpropagationAlgorithm(0.6),
+				 new BackpropagationAlgorithm(0.7),
+				 new BackpropagationAlgorithm(0.8),
+				 new BackpropagationAlgorithm(0.9),
+				 new BackpropagationAlgorithm(1),
+				 new BackpropagationAlgorithm(1.5),
+				 new BackpropagationAlgorithm(2),
 				//
-				new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
-						DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
-						DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				//
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(10, DEFAULT_GENERATIONS,
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
 				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(25, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(50, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(75, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(100, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(125, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
-				//
+
 				// new GeneticAlgorithmLearningMethod(
 				// new GeneticAlgorithm(150, DEFAULT_GENERATIONS,
 				// DEFAULT_BREED_RATE, DEFAULT_DEATH_RATE)),
@@ -76,9 +57,9 @@ public class Trainer {
 				// new GeneticAlgorithmLearningMethod(
 				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
 				// DEFAULT_GENERATIONS, 0, DEFAULT_DEATH_RATE)),
-				// new GeneticAlgorithmLearningMethod(
-				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
-				// DEFAULT_GENERATIONS, 0.125, DEFAULT_DEATH_RATE)),
+				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
+				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS, 0.125,
+				// DEFAULT_DEATH_RATE)),
 				// new GeneticAlgorithmLearningMethod(
 				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
 				// DEFAULT_GENERATIONS, 0.25, DEFAULT_DEATH_RATE)),
@@ -110,15 +91,15 @@ public class Trainer {
 				// new GeneticAlgorithmLearningMethod(
 				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
 				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.04)),
-				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
-				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, 0.05)),
-				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
-				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, 0.1)),
-				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
-				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
-				// DEFAULT_BREED_RATE, 0.15)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.05)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.1)),
+				// new GeneticAlgorithmLearningMethod(
+				// new GeneticAlgorithm(DEFAULT_CHROMOSOMES,
+				// DEFAULT_GENERATIONS, DEFAULT_BREED_RATE, 0.15)),
 				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
 				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
 				// DEFAULT_BREED_RATE, 0.2))
@@ -137,7 +118,10 @@ public class Trainer {
 							.setNeuralNetwork(neuralNetwork);
 
 				Trainer trainer = new Trainer(neuralNetwork, true,
-						learningMethod.getFileName() + "T" + trial);
+						learningMethod.getFileName()
+								+ ((LETTER_MULTIPLIER == 1) ? ""
+										: "Multiplier" + LETTER_MULTIPLIER)
+								+ "T" + trial);
 
 				trainer.trainNetwork();
 			}
@@ -243,7 +227,7 @@ public class Trainer {
 			totalIterations = ((GeneticAlgorithmLearningMethod) learningMethod)
 					.getGeneticAlgorithm().getGenerationCount();
 		else
-			totalIterations = trainingLetterData.size();
+			totalIterations = trainingLetterData.size() * LETTER_MULTIPLIER;
 
 		// Loop through each letter or generation
 		int lastPercent = -1;
@@ -266,7 +250,9 @@ public class Trainer {
 			learningMethod.onLearningCycleStart();
 
 			if (!isGenetic) {
-				LetterData letterData = trainingLetterData.get(i);
+				// Use modulus to handle overflow if using extra letters
+				LetterData letterData = trainingLetterData
+						.get(i % trainingLetterData.size());
 
 				neuralNetwork.learn(letterData.getData1D(),
 						Trainer.actualValues[Alphabet

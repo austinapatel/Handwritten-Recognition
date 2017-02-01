@@ -36,13 +36,14 @@ public class Genome<E> {
 		// Breed the best chromosomes
 		Arrays.sort(chromosomes);
 
-		// Breed the best part of the chromosomes
+		// Breed the best chromosomes
 		for (int i = 0; i < chromosomes.length * breedRate; i++)
-			chromosomes[i] = chromosomes[chromosomes.length - i - 1]
-					.cross(chromosomes[chromosomes.length - i - 2]);
+			if (chromosomes.length - i - 2 >= 0)
+				chromosomes[i] = chromosomes[chromosomes.length - i - 1]
+						.cross(chromosomes[chromosomes.length - i - 2]);
 
 		// Mutate
-		for (int i = 0; i < chromosomes.length * 2; i++)
+		for (int i = 0; i < chromosomes.length * 4; i++)
 			chromosomes[(int) (Math.random() * chromosomes.length)].mutate();
 
 		if (deathRate != 0) {

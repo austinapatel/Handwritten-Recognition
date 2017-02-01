@@ -38,21 +38,24 @@ public class Experimenter {
 
 	public static void main(String[] args) {
 		NeuralNetwork drawingNetwork = new NeuralNetwork(
-				new GeneticAlgorithmLearningMethod(
-						new GeneticAlgorithm(100, 100, 0.9, 0)),
+//				new GeneticAlgorithmLearningMethod(
+//						new GeneticAlgorithm(100, 100, 0.9, 0)),
 				// new WeightDecayBackpropagationAlgorithm(0.1, 0),
-				// new BackpropagationAlgorithm(0.1),
-				// new MomentumBackpropatationAlgorithm(0.1, 26, 400),
-				// new LearningDecayBackpropagationAlgorithm(0.1, 0.0),
+//				 new BackpropagationAlgorithm(0.1),
+//				 new MomentumBackpropatationAlgorithm(0.1, 26, 400),
+				 new LearningDecayBackpropagationAlgorithm(0.1, 0.0),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
 
-		GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) drawingNetwork
-				.getLearningMethod());
-		learningMethod.getGeneticAlgorithm().setNeuralNetwork(drawingNetwork);
+//		GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) drawingNetwork
+//				.getLearningMethod());
+//		learningMethod.getGeneticAlgorithm().setNeuralNetwork(drawingNetwork);
 
 		Trainer trainer = new Trainer(drawingNetwork);
 		trainer.trainNetwork();
+//		trainer.trainNetwork();
+//		trainer.trainNetwork();
+//		trainer.trainNetwork();
 
 		Experimenter experimenter = new Experimenter(drawingNetwork);
 		ExperimentalData experimentalData = experimenter.testNetwork();
@@ -143,16 +146,16 @@ public class Experimenter {
 			// actual);
 		}
 
-		System.out.println(numCorrect + " correct out of "
-				+ experimentalData.size() + " ("
-				+ (int) (((double) numCorrect / experimentalData.size()) * 100)
-				+ "%)");
-
-		for (int i = 0; i < letterCorrect.length; i++) {
-			System.out.println(Alphabet.getCharacter(i) + ": "
-					+ (int) ((double) letterCorrect[i] / numberOfEach * 100)
-					+ "%");
-		}
+//		System.out.println(numCorrect + " correct out of "
+//				+ experimentalData.size() + " ("
+//				+ (int) (((double) numCorrect / experimentalData.size()) * 100)
+//				+ "%)");
+//
+//		for (int i = 0; i < letterCorrect.length; i++) {
+//			System.out.println(Alphabet.getCharacter(i) + ": "
+//					+ (int) ((double) letterCorrect[i] / numberOfEach * 100)
+//					+ "%");
+//		}
 
 		double accuracy = (double) numCorrect / experimentalData.size();
 		double cost = 0;

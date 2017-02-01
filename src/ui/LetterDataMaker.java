@@ -27,7 +27,10 @@ import data.FileManager;
 import data.LetterData;
 import ui.CharacterPicker.Style;
 
-/** Displays an interface for creating stock letters. */
+/**
+ * Displays an interface for creating/viewing stock, experimental and training
+ * letters.
+ */
 @SuppressWarnings("serial")
 public class LetterDataMaker extends JPanel {
 
@@ -124,11 +127,12 @@ public class LetterDataMaker extends JPanel {
 				updateControlVisibility();
 			}
 		};
-		
+
 		characterPicker.setLocation(datasetPicker.getX(),
 				datasetPicker.getY() + datasetPicker.getHeight());
 		characterPicker.setBackground(getBackground());
-		characterPicker.setSize(CONTROL_COLUMN_WIDTH, characterPicker.getPrefferedHeight() * 3);
+		characterPicker.setSize(CONTROL_COLUMN_WIDTH,
+				characterPicker.getPrefferedHeight() * 3);
 
 		add(characterPicker);
 	}
@@ -146,6 +150,10 @@ public class LetterDataMaker extends JPanel {
 				String content = LetterData.colorsToText(
 						drawingGrid.getColors(), drawingGrid.getDrawingColor());
 
+				// Don't let the user save a letter if it is blank
+				if (!content.contains("1"))
+					return;
+				
 				FileManager.writeFileContent(filePath, content,
 						!datasetPicker.getSelectedValue()
 								.equals(Constants.STOCK_LETTERS_FOLDER));

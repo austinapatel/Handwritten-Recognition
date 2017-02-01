@@ -11,6 +11,8 @@ package data;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.naming.directory.SearchControls;
+
 /**
  * Combines output data files into a single "*.csv" file to facilitate data
  * analysis. Combines the data by putting files together that follow the given parameters.
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 public class FileSynthesizer {
 
 	public static void main(String[] args) {
-		new FileSynthesizer(FileManager.getAbsolutePath("\\OutputData\\"), "BP", "Accuracy");
+		new FileSynthesizer(FileManager.getAbsolutePath("\\OutputData\\"), "GA", "Cost");
 	}
 
 	public FileSynthesizer(String filePath, String... keywords) {
@@ -34,6 +36,7 @@ public class FileSynthesizer {
 				if (!name.contains(keyword))
 					good = false;
 			
+//			if (good && !name.contains("Multiplier"))
 			if (good)
 				desiredFiles.add(file);
 		}
@@ -43,11 +46,11 @@ public class FileSynthesizer {
 		for (int i = 0; i < finalFiles.length; i++)
 			finalFiles[i] = desiredFiles.get(i);
 		
-		synthesizeFiles(finalFiles, filePath);
+		synthesizeFiles(finalFiles, filePath, keywords);
 	}
 
 	/** Combines a set of files into a single one. */
-	private void synthesizeFiles(File[] files, String fileDirectory) {
+	private void synthesizeFiles(File[] files, String fileDirectory, String[] keywords) {
 		// For every set of different beginnings
 		String fileNameBeginning = files[0].getName().substring(0, 2);
 
@@ -93,8 +96,13 @@ public class FileSynthesizer {
 
 		System.out.println(fileNameBeginning + maxSize);
 
+		String nameContent = "";
+		
+		for (String search : keywords)
+			nameContent += '-' + search;
+		
 		FileManager.writeFileContent(
-				fileDirectory + "All-" + fileNameBeginning + ".csv", content,
+				fileDirectory + "All" + nameContent + ".csv", content,
 				false);
 	}
 

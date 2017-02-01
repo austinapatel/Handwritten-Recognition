@@ -32,7 +32,7 @@ public class GeneticAlgorithm {
 		ExperimentalData experimentalData = experimenter.testNetwork();
 		System.out.println(experimentalData.getAccuracy() * 100 + "%");
 
-		new GeneticAlgorithm(100, 100, 0.9d, 0) {
+		new GeneticAlgorithm(10, 20, 0.9d, 0) {
 			{
 				setNeuralNetwork(neuralNetwork);
 				beginEvolution();
@@ -105,7 +105,7 @@ public class GeneticAlgorithm {
 	 * multithreading for increased performance.
 	 */
 	public void nextGeneration() {
-		long startTime = System.currentTimeMillis();
+//		long startTime = System.currentTimeMillis();
 		// System.out.println("B" + startTime);
 		// Calculate fitness values
 		// Per neuron/letter
@@ -137,7 +137,7 @@ public class GeneticAlgorithm {
 			e.printStackTrace();
 		}
 
-		System.out.println((System.currentTimeMillis() - startTime));
+//		System.out.println((System.currentTimeMillis() - startTime));
 	}
 
 	/** Evaluates the fitness of a specific chromosome. */

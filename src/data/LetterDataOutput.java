@@ -22,20 +22,18 @@ import neural_network.Experimenter;
 /** Puts all of the letter data into an image file. */
 public class LetterDataOutput {
 	
-	private static final int EXPORT_WIDTH = 40;
-
 	public static void main(String[] args) {
 		new LetterDataOutput();
 	}
 	
 	public LetterDataOutput() {
-//		ArrayList<LetterData> trainingData = getTrainingData();
-//		BufferedImage[] trainingImages = new BufferedImage[trainingData.size()];
-//		
-//		for (int i = 0; i < trainingData.size(); i++)
-//			trainingImages[i] = getImage(trainingData.get(i));
-//		
-//		exportImages(trainingImages, "TrainingLettersImage");
+		ArrayList<LetterData> trainingData = getTrainingData();
+		BufferedImage[] trainingImages = new BufferedImage[trainingData.size()];
+		
+		for (int i = 0; i < trainingData.size(); i++)
+			trainingImages[i] = getImage(trainingData.get(i));
+		
+		exportImages(trainingImages, "TrainingLettersImage");
 		
 		ArrayList<LetterData> experimentalData = Experimenter.getExperimentalData();
 		BufferedImage[] experimentalImages = new BufferedImage[experimentalData.size()];
@@ -78,16 +76,18 @@ public class LetterDataOutput {
 	
 	/** Exports all of the images to a single image. */
 	private void exportImages(BufferedImage[] images, String fileName) {
+		int exportWidth = images.length / Alphabet.getLength();
+		
 		BufferedImage image = new BufferedImage(
-				Constants.GRID_WIDTH * EXPORT_WIDTH,
-				Constants.GRID_HEIGHT * (images.length / EXPORT_WIDTH),
+				Constants.GRID_WIDTH * exportWidth,
+				Constants.GRID_HEIGHT * (images.length / exportWidth),
 				BufferedImage.TYPE_INT_RGB);
 
 		Graphics2D graphics2d = image.createGraphics();
 
 		for (int i = 0; i < images.length; i++) {
-			int posY = i / EXPORT_WIDTH;
-			int posX = i % EXPORT_WIDTH;
+			int posY = i / exportWidth;
+			int posX = i % exportWidth;
 
 			BufferedImage letterImage = images[i];
 
