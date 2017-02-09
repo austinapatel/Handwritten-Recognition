@@ -8,6 +8,7 @@
 
 package neural_network;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import data.Alphabet;
@@ -16,35 +17,43 @@ import data.ExperimentalData;
 import data.FileManager;
 import data.LetterData;
 import neural_network.genetics.GeneticAlgorithm;
+import ui.Interface;
 
 /** Uses training "LetterData" as inputs to teach the neural network. */
 public class Trainer {
 
-	private static int TRIALS = 1, LETTER_MULTIPLIER = 4;
+	private static int TRIALS = 1, ITERATION_MULTIPLIER = 3, GA_MULTIPLIER = 1;
 	private static int DEFAULT_GENERATIONS = 100, DEFAULT_CHROMOSOMES = 100,
-			TEST_COUNT = 100 * LETTER_MULTIPLIER;
+			TEST_COUNT = 100 * ITERATION_MULTIPLIER,
+			GA_TEST_COUNT = 100 * GA_MULTIPLIER;
 	private static double DEFAULT_BREED_RATE = 0.9, DEFAULT_DEATH_RATE = 0.00;
 
 	private String accuracyFileContent, costFileContent;
 
 	public static void main(String[] args) {
 		LearningMethod[] learningMethods = new LearningMethod[] {
-				 new BackpropagationAlgorithm(0),
-				 new BackpropagationAlgorithm(0.025),
-				 new BackpropagationAlgorithm(0.05),
-				 new BackpropagationAlgorithm(0.1),
-				 new BackpropagationAlgorithm(0.2),
-				 new BackpropagationAlgorithm(0.3),
-				 new BackpropagationAlgorithm(0.4),
-				 new BackpropagationAlgorithm(0.5),
-				 new BackpropagationAlgorithm(0.6),
-				 new BackpropagationAlgorithm(0.6),
-				 new BackpropagationAlgorithm(0.7),
-				 new BackpropagationAlgorithm(0.8),
-				 new BackpropagationAlgorithm(0.9),
-				 new BackpropagationAlgorithm(1),
-				 new BackpropagationAlgorithm(1.5),
-				 new BackpropagationAlgorithm(2),
+				// new BackpropagationAlgorithm(0),
+				// new BackpropagationAlgorithm(0.025),
+				// new BackpropagationAlgorithm(0.05),
+				// new BackpropagationAlgorithm(0.1),
+				// new BackpropagationAlgorithm(0.2),
+				// new BackpropagationAlgorithm(0.3),
+				// new BackpropagationAlgorithm(0.4),
+				// new BackpropagationAlgorithm(0.5),
+				// new BackpropagationAlgorithm(0.6),
+				// new BackpropagationAlgorithm(0.6),
+				// new BackpropagationAlgorithm(0.7),
+				// new BackpropagationAlgorithm(0.8),
+				// new BackpropagationAlgorithm(0.9),
+				// new BackpropagationAlgorithm(1),
+				// new BackpropagationAlgorithm(1.5),
+				// new BackpropagationAlgorithm(2),
+
+				new MomentumBackpropatationAlgorithm(0.1),
+				// new MomentumBackpropatationAlgorithm(0.3),
+				// new MomentumBackpropatationAlgorithm(0.5),
+				// new MomentumBackpropatationAlgorithm(0.7),
+				// new MomentumBackpropatationAlgorithm(0.9),
 				//
 				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
 				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
@@ -103,28 +112,104 @@ public class Trainer {
 				// new GeneticAlgorithmLearningMethod(new GeneticAlgorithm(
 				// DEFAULT_CHROMOSOMES, DEFAULT_GENERATIONS,
 				// DEFAULT_BREED_RATE, 0.2))
+
+				// new LearningDecayBackpropagationAlgorithm(0.1,
+				// 0.999999999999)
 		};
 
-		for (int trial = 1; trial <= TRIALS; trial++)
-			for (LearningMethod learningMethod : learningMethods) {
-				NeuralNetwork neuralNetwork = new NeuralNetwork(learningMethod,
-						Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
-						Alphabet.getLength());
+		// for (int trial = 1; trial <= TRIALS; trial++)
+		// for (LearningMethod learningMethod : learningMethods) {
+		// NeuralNetwork neuralNetwork = new NeuralNetwork(learningMethod,
+		// Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
+		// Alphabet.getLength());
+		//
+		// if (learningMethod.getName()
+		// .equals(GeneticAlgorithmLearningMethod.NAME))
+		// ((GeneticAlgorithmLearningMethod) learningMethod)
+		// .getGeneticAlgorithm()
+		// .setNeuralNetwork(neuralNetwork);
+		//
+		// Trainer trainer = new Trainer(neuralNetwork, true,
+		// learningMethod.getFileName()
+		// + ((LETTER_MULTIPLIER == 1) ? ""
+		// : "Multiplier" + LETTER_MULTIPLIER)
+		// + "T" + trial);
+		//
+		// trainer.trainNetwork();
+		// }
 
-				if (learningMethod.getName()
-						.equals(GeneticAlgorithmLearningMethod.NAME))
-					((GeneticAlgorithmLearningMethod) learningMethod)
-							.getGeneticAlgorithm()
-							.setNeuralNetwork(neuralNetwork);
+		twoLearningAlgorithmTest(true);
+	}
 
-				Trainer trainer = new Trainer(neuralNetwork, true,
-						learningMethod.getFileName()
-								+ ((LETTER_MULTIPLIER == 1) ? ""
-										: "Multiplier" + LETTER_MULTIPLIER)
-								+ "T" + trial);
+	public static NeuralNetwork twoLearningAlgorithmTest(boolean debug) {
+		NeuralNetwork neuralNetwork = new NeuralNetwork(
+				new GeneticAlgorithmLearningMethod(
+						new GeneticAlgorithm(100, 100, 0.5, 0)),
+				// new WeightDecayBackpropagationAlgorithm(0.1, 0),
+				// new BackpropagationAlgorithm(0.1),
+				// new MomentumBackpropatationAlgorithm(0.1),
+				// new LearningDecayBackpropagationAlgorithm(0.1, 1.00000001),
+				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
+				Alphabet.getLength());
 
-				trainer.trainNetwork();
-			}
+		GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) neuralNetwork
+				.getLearningMethod());
+		learningMethod.getGeneticAlgorithm().setNeuralNetwork(neuralNetwork);
+
+		Trainer trainer;
+		if (debug)
+			trainer = new Trainer(neuralNetwork, true, "combinedGAandBP");
+		else
+			trainer = new Trainer(neuralNetwork);
+		trainer.trainNetwork(true);
+		trainer.trainNetwork(true);
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+
+		Experimenter experimenter = new Experimenter(neuralNetwork);
+		ExperimentalData experimentalData = experimenter.testNetwork();
+
+		System.out.println("Accuracy: "
+				+ (int) (experimentalData.getAccuracy() * 100) + '%');
+
+		// learningMethod.getGeneticAlgorithm().commitWeights();
+		// experimentalData =
+		// experimenter.testNetwork(Experimenter.getExperimentalData());
+		//
+		// System.out.println("Accuracy: " + (int)
+		// (experimentalData.getAccuracy() * 100) + '%');
+
+		// Now learn with the backpropagation algorithm
+
+		neuralNetwork.setLearningMethod(new BackpropagationAlgorithm(0.1));
+
+		// Now learn with the genetic algorithm
+		// neuralNetwork.setLearningMethod(new GeneticAlgorithmLearningMethod(
+		// new GeneticAlgorithm(100, 100, 0.9, 0.0)));
+		//
+		// GeneticAlgorithm geneticAlgorithm = ((GeneticAlgorithmLearningMethod)
+		// (neuralNetwork
+		// .getLearningMethod())).getGeneticAlgorithm();
+		//
+		// geneticAlgorithm.setNeuralNetwork(neuralNetwork);
+		//
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+
+		experimentalData = experimenter.testNetwork();
+
+		System.out.println("Accuracy: "
+				+ (int) (experimentalData.getAccuracy() * 100) + '%');
+
+		// new Interface(neuralNetwork);
+
+		return neuralNetwork;
 	}
 
 	private static boolean init;
@@ -146,6 +231,10 @@ public class Trainer {
 		this.neuralNetwork = neuralNetwork;
 		this.debug = debug;
 		this.fileName = fileName;
+
+		File file = new File(fileName);
+		if (file.exists())
+			file.delete();
 
 		experimenter = new Experimenter(neuralNetwork);
 
@@ -201,11 +290,15 @@ public class Trainer {
 					tempData.remove((int) (Math.random() * tempData.size())));
 	}
 
+	public void trainNetwork() {
+		trainNetwork(false);
+	}
+
 	/**
 	 * Trains the neural network using its learning method and handles for
 	 * Genetic Algorithm learning additionally.
 	 */
-	public void trainNetwork() {
+	public void trainNetwork(boolean append) {
 		if (debug)
 			System.out.println(fileName);
 
@@ -223,15 +316,20 @@ public class Trainer {
 				.equals(GeneticAlgorithmLearningMethod.NAME);
 
 		int totalIterations = 0;
-		if (isGenetic)
+		if (isGenetic) {
 			totalIterations = ((GeneticAlgorithmLearningMethod) learningMethod)
 					.getGeneticAlgorithm().getGenerationCount();
-		else
-			totalIterations = trainingLetterData.size() * LETTER_MULTIPLIER;
+
+			totalIterations *= GA_MULTIPLIER;
+		} else {
+			totalIterations = trainingLetterData.size();
+			totalIterations *= ITERATION_MULTIPLIER;
+		}
 
 		// Loop through each letter or generation
 		int lastPercent = -1;
-		int testIncrement = totalIterations / TEST_COUNT;
+		int testIncrement = totalIterations
+				/ ((isGenetic) ? GA_TEST_COUNT : TEST_COUNT);
 		boolean testThisIteration = false;
 
 		for (int i = 0; i < totalIterations; i++) {
@@ -267,10 +365,11 @@ public class Trainer {
 			testNetwork();
 
 			System.out.println("100%");
-			FileManager.writeFileContent(accuracyPath, accuracyFileContent,
-					false);
+			FileManager.writeFileContent(accuracyPath,
+					accuracyFileContent.trim(), append);
 
-			FileManager.writeFileContent(costPath, costFileContent, false);
+			FileManager.writeFileContent(costPath, costFileContent.trim(),
+					append);
 		}
 	}
 

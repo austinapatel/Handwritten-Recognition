@@ -8,6 +8,9 @@
 
 package neural_network;
 
+import data.Alphabet;
+import data.Constants;
+
 /**
  * Adds momentum functionality to the backpropagation learning algorithm to
  * reduce fluctuations in weight changes by remebering the last changes to the
@@ -20,8 +23,11 @@ public class MomentumBackpropatationAlgorithm extends BackpropagationAlgorithm {
 	private double[][] momentum;
 	private int[][] count;
 	
-	public MomentumBackpropatationAlgorithm(double learningRate, int neuronCount, int weightCount) {
+	public MomentumBackpropatationAlgorithm(double learningRate) {
 		super(learningRate);
+		
+		int neuronCount = Alphabet.getLength();
+		int weightCount = Constants.GRID_WIDTH * Constants.GRID_HEIGHT;
 		
 		momentum = new double[neuronCount][weightCount];
 		count = new int[neuronCount][weightCount];
@@ -35,6 +41,16 @@ public class MomentumBackpropatationAlgorithm extends BackpropagationAlgorithm {
 		count[neuronId][weightId]++;
 		
 		return momentum[neuronId][weightId] / count[neuronId][weightId];
+	}
+	
+	@Override
+	public String getFileName() {
+		return "MM" + learningRate;
+	}
+	
+	@Override
+	public String getName() {
+		return NAME;
 	}
 
 }

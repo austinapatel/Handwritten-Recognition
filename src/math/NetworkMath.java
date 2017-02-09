@@ -17,6 +17,10 @@ public class NetworkMath {
 	
 	public static double sigmoid(double input) {
 		return 1 / (1 + Math.exp(-input));
+	} 
+	
+	public static double derrivativeSigmoid(double input) {
+		return Math.exp(input) / (Math.pow(Math.exp(input + 1), 2));
 	}
 	
 	public static double cost(double[] experimental, int[] actual) {

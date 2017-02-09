@@ -38,7 +38,7 @@ import ui.CharacterPicker.Style;
 public class WeightGrid extends ColorGrid {
 
 	private static final int LETTER_COLUMN_WIDTH = 24, SLIDER_HEIGHT = 20,
-			SLIDER_MIN = 0, SLIDER_MAX = 500, SLIDER_INITIAL = 500,
+			SLIDER_MIN = 0, SLIDER_MAX = 2000, SLIDER_INITIAL = 200,
 			EXPORT_WIDTH = 7, EXPORT_HEIGHT = 4;
 
 	private NeuralNetwork neuralNetwork;

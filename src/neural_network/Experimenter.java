@@ -37,27 +37,28 @@ public class Experimenter {
 	}
 
 	public static void main(String[] args) {
-		NeuralNetwork drawingNetwork = new NeuralNetwork(
-//				new GeneticAlgorithmLearningMethod(
-//						new GeneticAlgorithm(100, 100, 0.9, 0)),
+		NeuralNetwork neuralNetwork = new NeuralNetwork(
+				 new GeneticAlgorithmLearningMethod(
+				 new GeneticAlgorithm(100, 100, 0.9, 0)),
 				// new WeightDecayBackpropagationAlgorithm(0.1, 0),
-//				 new BackpropagationAlgorithm(0.1),
-//				 new MomentumBackpropatationAlgorithm(0.1, 26, 400),
-				 new LearningDecayBackpropagationAlgorithm(0.1, 0.0),
+//				new BackpropagationAlgorithm(0.1),
+				// new MomentumBackpropatationAlgorithm(0.1),
+				// new LearningDecayBackpropagationAlgorithm(0.1, 1.00000001),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
 
-//		GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) drawingNetwork
-//				.getLearningMethod());
-//		learningMethod.getGeneticAlgorithm().setNeuralNetwork(drawingNetwork);
+		 GeneticAlgorithmLearningMethod learningMethod =
+		 ((GeneticAlgorithmLearningMethod) neuralNetwork
+		 .getLearningMethod());
+		 learningMethod.getGeneticAlgorithm().setNeuralNetwork(neuralNetwork);
 
-		Trainer trainer = new Trainer(drawingNetwork);
+		Trainer trainer = new Trainer(neuralNetwork);
 		trainer.trainNetwork();
-//		trainer.trainNetwork();
-//		trainer.trainNetwork();
-//		trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
+		// trainer.trainNetwork();
 
-		Experimenter experimenter = new Experimenter(drawingNetwork);
+		Experimenter experimenter = new Experimenter(neuralNetwork);
 		ExperimentalData experimentalData = experimenter.testNetwork();
 
 		System.out.println("Accuracy: "
@@ -69,6 +70,34 @@ public class Experimenter {
 		//
 		// System.out.println("Accuracy: " + (int)
 		// (experimentalData.getAccuracy() * 100) + '%');
+
+		
+		// Now learn with the backpropagation algorithm
+		
+		neuralNetwork.setLearningMethod(new BackpropagationAlgorithm(0.1));
+		
+		
+		// Now learn with the genetic algorithm
+//		neuralNetwork.setLearningMethod(new GeneticAlgorithmLearningMethod(
+//				new GeneticAlgorithm(100, 100, 0.9, 0.0)));
+//
+//		GeneticAlgorithm geneticAlgorithm = ((GeneticAlgorithmLearningMethod) (neuralNetwork
+//				.getLearningMethod())).getGeneticAlgorithm();
+//		
+//		geneticAlgorithm.setNeuralNetwork(neuralNetwork);
+//
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		trainer.trainNetwork();
+		
+
+		experimentalData = experimenter.testNetwork();
+
+		System.out.println("Accuracy: "
+				+ (int) (experimentalData.getAccuracy() * 100) + '%');
 	}
 
 	public static ArrayList<LetterData> getExperimentalData() {
@@ -146,16 +175,16 @@ public class Experimenter {
 			// actual);
 		}
 
-//		System.out.println(numCorrect + " correct out of "
-//				+ experimentalData.size() + " ("
-//				+ (int) (((double) numCorrect / experimentalData.size()) * 100)
-//				+ "%)");
-//
-//		for (int i = 0; i < letterCorrect.length; i++) {
-//			System.out.println(Alphabet.getCharacter(i) + ": "
-//					+ (int) ((double) letterCorrect[i] / numberOfEach * 100)
-//					+ "%");
-//		}
+		// System.out.println(numCorrect + " correct out of "
+		// + experimentalData.size() + " ("
+		// + (int) (((double) numCorrect / experimentalData.size()) * 100)
+		// + "%)");
+		//
+		// for (int i = 0; i < letterCorrect.length; i++) {
+		// System.out.println(Alphabet.getCharacter(i) + ": "
+		// + (int) ((double) letterCorrect[i] / numberOfEach * 100)
+		// + "%");
+		// }
 
 		double accuracy = (double) numCorrect / experimentalData.size();
 		double cost = 0;

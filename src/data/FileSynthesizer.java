@@ -20,7 +20,7 @@ import javax.naming.directory.SearchControls;
 public class FileSynthesizer {
 
 	public static void main(String[] args) {
-		new FileSynthesizer(FileManager.getAbsolutePath("\\OutputData\\"), "GA", "Cost");
+		new FileSynthesizer(FileManager.getAbsolutePath("\\OutputData\\"), "MM", "Cost");
 	}
 
 	public FileSynthesizer(String filePath, String... keywords) {

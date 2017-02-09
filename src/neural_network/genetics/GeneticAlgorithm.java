@@ -17,6 +17,7 @@ import data.LetterData;
 import neural_network.Experimenter;
 import neural_network.NeuralNetwork;
 import neural_network.NoLearningMethod;
+import ui.Interface;
 
 /**
  * Performs functions for the genetic algorithm (unsupervised learning method).
@@ -86,7 +87,7 @@ public class GeneticAlgorithm {
 		// beginEvolution();
 
 		// Test the genetic algorithm
-		// experimenter.testNetwork(experimenter.getExperimentalData());
+		// experimenter.testNetwork(experimenter.getExperimentalData());		
 	}
 
 	/**

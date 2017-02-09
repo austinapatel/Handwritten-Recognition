@@ -54,5 +54,9 @@ public class Neuron {
 		for (int i = 0; i < weights.length; i++)
 			weights[i] += learningMethod.getWeightDelta(error, inputs[i], id, i);
 	}
+	
+	public void setLearningMethod(LearningMethod learningMethod) {
+		this.learningMethod = learningMethod;
+	}
 
 }

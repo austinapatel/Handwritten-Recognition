@@ -27,6 +27,7 @@ import main.Main;
 import neural_network.BackpropagationAlgorithm;
 import neural_network.GeneticAlgorithmLearningMethod;
 import neural_network.LearningMethod;
+import neural_network.MomentumBackpropatationAlgorithm;
 import neural_network.NeuralNetwork;
 import neural_network.Trainer;
 import neural_network.genetics.GeneticAlgorithm;
@@ -48,16 +49,20 @@ public class Interface extends JFrame {
 			weightGridBorderPanel;
 	private WeightGrid weightGrid;
 
-	public Interface() {
+	public Interface(NeuralNetwork neuralNetwork) {
 		panelBorder = BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK);
 
-		initializeNetwork();
+		initializeNetwork(neuralNetwork);
 		addDrawingPredictionPanel();
 		addLetterDataMaker();
 		addWeightGrid();
 
 		initializeFrame();
 		setVisible(true);
+	}
+	
+	public Interface() {
+		this(null);
 	}
 
 	private void initializeFrame() {
@@ -93,18 +98,23 @@ public class Interface extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	private void initializeNetwork() {
-		LearningMethod learningMethod = 
-//				new GeneticAlgorithmLearningMethod(
-//				new GeneticAlgorithm(100, 100, 0.9, 0)
-//				);
-				new BackpropagationAlgorithm(0.1);
-		drawingNetwork = new NeuralNetwork(learningMethod,
-				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
-				Alphabet.getLength());
+	private void initializeNetwork(NeuralNetwork network) {
+		if (network == null) {
+			LearningMethod learningMethod = 
+//					new GeneticAlgorithmLearningMethod(
+//					new GeneticAlgorithm(100, 300, 0.5, 0)
+//					);
+//					new BackpropagationAlgorithm(0.1);
+					new MomentumBackpropatationAlgorithm(0.1);
+			drawingNetwork = new NeuralNetwork(learningMethod,
+					Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
+					Alphabet.getLength());
 
-//		((GeneticAlgorithmLearningMethod) learningMethod).getGeneticAlgorithm()
-//				.setNeuralNetwork(drawingNetwork);
+//			drawingNetwork = Trainer.twoLearningAlgorithmTest(false);
+//			((GeneticAlgorithmLearningMethod) learningMethod).getGeneticAlgorithm()
+//					.setNeuralNetwork(drawingNetwork);
+		} else
+			drawingNetwork = network;
 
 		Trainer trainer = new Trainer(drawingNetwork);
 		trainer.trainNetwork();

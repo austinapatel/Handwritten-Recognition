@@ -8,6 +8,8 @@
 
 package neural_network;
 
+import math.NetworkMath;
+
 /**Implements the backpropagation artificial neural network learning method.*/
 public class BackpropagationAlgorithm extends LearningMethod {
 
