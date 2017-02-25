@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ColorGrid extends JPanel {
 
-	protected static int PIXEL_SIZE = 35;
+	public static int PIXEL_SIZE = 35;
 
 	protected int width, height;
 	protected Color[][] colors;

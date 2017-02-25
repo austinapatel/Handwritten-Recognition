@@ -160,21 +160,6 @@ public class GeneticAlgorithm {
 		chromosome.setFitness(fitness);
 	}
 
-	/** Assign the best chomosomes to the weights in the neural network */
-	// public void commitWeights() {
-	// for (int i = 0; i < genomes.length; i++) {
-	// Genome<Double> genome = genomes[i];
-	// Chromosome<Double> chromosome = genome
-	// .getChromosomes()[chromsosomeCount - 1];
-	// double[] weights = new double[chromosome.size()];
-	//
-	// for (int k = 0; k < weights.length; k++)
-	// weights[k] = chromosome.get(k);
-	//
-	// neuralNetwork.getNeurons()[i].setWeights(weights);
-	// }
-	// }
-
 	public int getChromsosomeCount() {
 		return chromsosomeCount;
 	}

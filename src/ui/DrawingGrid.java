@@ -25,14 +25,19 @@ import data.Constants;
 public class DrawingGrid extends ColorGrid {
 		
 	private Color drawingColor;
-
+	
 	public DrawingGrid(int width, int height, Color drawingColor) {
+		this(width,height,drawingColor, true);
+	}
+
+	public DrawingGrid(int width, int height, Color drawingColor, boolean showClearButton) {
 		super(width, height);
 		setSize(getWidth(), getHeight() + Constants.BUTTON_HEIGHT);
 		
 		this.drawingColor = drawingColor;
 		
-		addClearButton();
+		if (showClearButton)
+			addClearButton();
 		
 		addMouseMotionListener(new MouseMotionListener() {
 			

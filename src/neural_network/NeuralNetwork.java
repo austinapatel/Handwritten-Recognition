@@ -2,7 +2,7 @@
 /**
  * Author: Austin Patel
  * Project: Handwritten Recognition
- * File Name: Network.java
+ * File Name: NeuralNetwork.java
  * Created: 01/01/17
  */
 

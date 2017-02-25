@@ -22,10 +22,11 @@ import ui.Interface;
 /** Uses training "LetterData" as inputs to teach the neural network. */
 public class Trainer {
 
-	private static int TRIALS = 1, ITERATION_MULTIPLIER = 3, GA_MULTIPLIER = 1;
+	private static int TRIALS = 1;
+	private static double ITERATION_MULTIPLIER = 1.5, GA_MULTIPLIER = 1.5;
 	private static int DEFAULT_GENERATIONS = 100, DEFAULT_CHROMOSOMES = 100,
-			TEST_COUNT = 100 * ITERATION_MULTIPLIER,
-			GA_TEST_COUNT = 100 * GA_MULTIPLIER;
+			TEST_COUNT = (int) (100 * ITERATION_MULTIPLIER),
+			GA_TEST_COUNT = (int) (100 * GA_MULTIPLIER);
 	private static double DEFAULT_BREED_RATE = 0.9, DEFAULT_DEATH_RATE = 0.00;
 
 	private String accuracyFileContent, costFileContent;
@@ -146,15 +147,19 @@ public class Trainer {
 				new GeneticAlgorithmLearningMethod(
 						new GeneticAlgorithm(100, 100, 0.5, 0)),
 				// new WeightDecayBackpropagationAlgorithm(0.1, 0),
-				// new BackpropagationAlgorithm(0.1),
+//				 new BackpropagationAlgorithm(0.1),
 				// new MomentumBackpropatationAlgorithm(0.1),
 				// new LearningDecayBackpropagationAlgorithm(0.1, 1.00000001),
 				Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 				Alphabet.getLength());
 
-		GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) neuralNetwork
-				.getLearningMethod());
-		learningMethod.getGeneticAlgorithm().setNeuralNetwork(neuralNetwork);
+		if (neuralNetwork.getLearningMethod().getName()
+				.equals(GeneticAlgorithmLearningMethod.NAME)) {
+			GeneticAlgorithmLearningMethod learningMethod = ((GeneticAlgorithmLearningMethod) neuralNetwork
+					.getLearningMethod());
+			learningMethod.getGeneticAlgorithm()
+					.setNeuralNetwork(neuralNetwork);
+		}
 
 		Trainer trainer;
 		if (debug)
@@ -162,7 +167,7 @@ public class Trainer {
 		else
 			trainer = new Trainer(neuralNetwork);
 		trainer.trainNetwork(true);
-		trainer.trainNetwork(true);
+		// trainer.trainNetwork(true);
 		// trainer.trainNetwork();
 		// trainer.trainNetwork();
 
@@ -181,7 +186,9 @@ public class Trainer {
 
 		// Now learn with the backpropagation algorithm
 
-		neuralNetwork.setLearningMethod(new BackpropagationAlgorithm(0.1));
+		 neuralNetwork.setLearningMethod(new BackpropagationAlgorithm(0.1));
+//		neuralNetwork
+//				.setLearningMethod(new MomentumBackpropatationAlgorithm(0.1));
 
 		// Now learn with the genetic algorithm
 		// neuralNetwork.setLearningMethod(new GeneticAlgorithmLearningMethod(
@@ -193,8 +200,8 @@ public class Trainer {
 		//
 		// geneticAlgorithm.setNeuralNetwork(neuralNetwork);
 		//
-		trainer.trainNetwork();
-		trainer.trainNetwork();
+		trainer.trainNetwork(true);
+		// trainer.trainNetwork();
 		// trainer.trainNetwork();
 		// trainer.trainNetwork();
 		// trainer.trainNetwork();

@@ -60,7 +60,7 @@ public class Interface extends JFrame {
 		initializeFrame();
 		setVisible(true);
 	}
-	
+
 	public Interface() {
 		this(null);
 	}
@@ -92,7 +92,6 @@ public class Interface extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		;
 
 		setTitle("Neural Network Handwritten Letter Recognition");
 		setLocationRelativeTo(null);
@@ -100,19 +99,20 @@ public class Interface extends JFrame {
 
 	private void initializeNetwork(NeuralNetwork network) {
 		if (network == null) {
-			LearningMethod learningMethod = 
-//					new GeneticAlgorithmLearningMethod(
-//					new GeneticAlgorithm(100, 300, 0.5, 0)
-//					);
-//					new BackpropagationAlgorithm(0.1);
+			LearningMethod learningMethod =
+					// new GeneticAlgorithmLearningMethod(
+					// new GeneticAlgorithm(100, 300, 0.5, 0)
+					// );
+					// new BackpropagationAlgorithm(0.1);
 					new MomentumBackpropatationAlgorithm(0.1);
 			drawingNetwork = new NeuralNetwork(learningMethod,
 					Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 					Alphabet.getLength());
 
-//			drawingNetwork = Trainer.twoLearningAlgorithmTest(false);
-//			((GeneticAlgorithmLearningMethod) learningMethod).getGeneticAlgorithm()
-//					.setNeuralNetwork(drawingNetwork);
+			// drawingNetwork = Trainer.twoLearningAlgorithmTest(false);
+			// ((GeneticAlgorithmLearningMethod)
+			// learningMethod).getGeneticAlgorithm()
+			// .setNeuralNetwork(drawingNetwork);
 		} else
 			drawingNetwork = network;
 
