@@ -349,7 +349,7 @@ public class Trainer {
 				lastPercent = percent;
 			}
 
-			testThisIteration = (i % testIncrement == 0) && i != 0;
+//			testThisIteration = (i % testIncrement == 0) && i != 0;
 
 			// Learning process
 			learningMethod.onLearningCycleStart();
