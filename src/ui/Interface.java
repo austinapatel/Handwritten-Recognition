@@ -103,8 +103,8 @@ public class Interface extends JFrame {
 //					 new GeneticAlgorithmLearningMethod(
 //					 new GeneticAlgorithm(50, 100, 0.5, 0)
 //					 );
-					 new BackpropagationAlgorithm(0.1);
-//					new MomentumBackpropatationAlgorithm(0.1);
+//					 new BackpropagationAlgorithm(0.1);
+					new MomentumBackpropatationAlgorithm(0.1);
 			drawingNetwork = new NeuralNetwork(learningMethod,
 					Constants.GRID_WIDTH * Constants.GRID_HEIGHT,
 					Alphabet.getLength());
